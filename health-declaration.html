@@ -2797,328 +2797,246 @@ window.sendForm = function() {
 
 
 /* ====================================================
-   Single-canvas source of truth
+   Signature System - Clean Rewrite
    ==================================================== */
-window.enableSignatureDrawing = function(canvas) {
-    // הגנה מפני הצמדה כפולה של listeners
-    if (canvas._drawingEnabled) return;
-    canvas._drawingEnabled = true;
 
-    var ctx = canvas.getContext("2d");
+// אחסון נתוני החתימה לכל ID
+window.signaturePads = window.signaturePads || {};
+
+(function() {
+    var modal      = null;
+    var modalCanvas= null;
+    var modalCtx   = null;
+    var hint       = null;
+    var titleEl    = null;
+    var currentTargetId = null;
     var drawing = false;
+    var isEmpty = true;
 
-    ctx.lineWidth = 2.4;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#1a1a1a";
+    function ensureModalRef() {
+        if (modal) return;
+        modal       = document.getElementById('signatureModal');
+        modalCanvas = document.getElementById('sigModalCanvas');
+        hint        = document.getElementById('sigModalHint');
+        titleEl     = document.getElementById('sigModalTitle');
+        if (modalCanvas) modalCtx = modalCanvas.getContext('2d');
+    }
+
+    function fitCanvas() {
+        if (!modalCanvas) return;
+        var rect = modalCanvas.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+        // 1:1 ללא DPR scaling - הקואורדינטות של המגע תואמות בדיוק לציור
+        modalCanvas.width  = Math.floor(rect.width);
+        modalCanvas.height = Math.floor(rect.height);
+        modalCtx.lineWidth   = 2.4;
+        modalCtx.lineCap     = 'round';
+        modalCtx.lineJoin    = 'round';
+        modalCtx.strokeStyle = '#1a1a1a';
+    }
 
     function getTouchPos(e) {
-        var rect = canvas.getBoundingClientRect();
-        var t = e.touches[0] || e.changedTouches[0];
+        var rect = modalCanvas.getBoundingClientRect();
+        var t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
         return { x: t.clientX - rect.left, y: t.clientY - rect.top };
     }
     function getMousePos(e) {
-        var rect = canvas.getBoundingClientRect();
+        var rect = modalCanvas.getBoundingClientRect();
         return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }
     function hideHint() {
-        var h = document.getElementById("sigModalHint");
-        if (h) h.classList.add("hidden");
+        if (hint) hint.classList.add('hidden');
     }
 
-    // === Touch (מובייל) ===
-    canvas.addEventListener("touchstart", function(e) {
+    function onTouchStart(e) {
         e.preventDefault();
         drawing = true;
-        var pos = getTouchPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
+        isEmpty = false;
+        var p = getTouchPos(e);
+        modalCtx.beginPath();
+        modalCtx.moveTo(p.x, p.y);
         hideHint();
-    }, { passive: false });
-
-    canvas.addEventListener("touchmove", function(e) {
+    }
+    function onTouchMove(e) {
         if (!drawing) return;
         e.preventDefault();
-        var pos = getTouchPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }, { passive: false });
+        var p = getTouchPos(e);
+        modalCtx.lineTo(p.x, p.y);
+        modalCtx.stroke();
+    }
+    function onTouchEnd() { drawing = false; }
 
-    canvas.addEventListener("touchend",    function() { drawing = false; });
-    canvas.addEventListener("touchcancel", function() { drawing = false; });
-
-    // === Mouse (דסקטופ) ===
-    canvas.addEventListener("mousedown", function(e) {
+    function onMouseDown(e) {
         drawing = true;
-        var pos = getMousePos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
+        isEmpty = false;
+        var p = getMousePos(e);
+        modalCtx.beginPath();
+        modalCtx.moveTo(p.x, p.y);
         hideHint();
-    });
-    canvas.addEventListener("mousemove", function(e) {
+    }
+    function onMouseMove(e) {
         if (!drawing) return;
-        var pos = getMousePos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    });
-    canvas.addEventListener("mouseup",    function() { drawing = false; });
-    canvas.addEventListener("mouseleave", function() { drawing = false; });
-};
+        var p = getMousePos(e);
+        modalCtx.lineTo(p.x, p.y);
+        modalCtx.stroke();
+    }
+    function onMouseUp() { drawing = false; }
 
-window.initSignatureCanvas = function(targetId) {
-    var canvas = document.getElementById("sigModalCanvas");
-
-    // הגדר את הממדים הפנימיים של הקנבס לפי גודל ה-CSS שלו -
-    // יחס 1:1 כדי שקואורדינטות המגע יתואמו לציור (ללא ctx.scale!)
-    var rect = canvas.getBoundingClientRect();
-    if (rect.width > 0 && rect.height > 0) {
-        canvas.width  = Math.floor(rect.width);
-        canvas.height = Math.floor(rect.height);
+    function attachOnce() {
+        if (!modalCanvas || modalCanvas._sigAttached) return;
+        modalCanvas._sigAttached = true;
+        modalCanvas.addEventListener('touchstart', onTouchStart, { passive: false });
+        modalCanvas.addEventListener('touchmove',  onTouchMove,  { passive: false });
+        modalCanvas.addEventListener('touchend',   onTouchEnd);
+        modalCanvas.addEventListener('touchcancel',onTouchEnd);
+        modalCanvas.addEventListener('mousedown',  onMouseDown);
+        modalCanvas.addEventListener('mousemove',  onMouseMove);
+        modalCanvas.addEventListener('mouseup',    onMouseUp);
+        modalCanvas.addEventListener('mouseleave', onMouseUp);
     }
 
-    var ctx = canvas.getContext("2d", { willReadFrequently: true });
-    ctx.lineWidth = 2.4;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#1a1a1a";
-
-    window.signaturePads = window.signaturePads || {};
-    window.signaturePads.current = {
-        targetId: targetId,
-        canvas: canvas,
-        ctx: ctx
-    };
-
-    window.enableSignatureDrawing(canvas);
-
-    console.log("Canvas:", window.signaturePads.current.canvas);
-    console.log("Size:", window.signaturePads.current.canvas.width, window.signaturePads.current.canvas.height);
-};
-
-window.saveSignature = function() {
-    var pad = window.signaturePads && window.signaturePads.current;
-    if (!pad || !pad.canvas) return;
-    var canvas = pad.canvas;
-    try { canvas.dispatchEvent(new Event("pointerup", { bubbles: true })); } catch (_) {}
-    requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-            var dataURL = canvas.toDataURL("image/png");
-            if (!dataURL || dataURL === "data:,") {
-                alert("יש לחתום לפני שמירה");
-                return;
-            }
-            var id = pad.targetId;
-            window.signaturePads[id] = {
-                data: dataURL,
-                isSigned: function() { return true; },
-                toDataURL: function() { return dataURL; },
-                isEmpty: false
-            };
-
-            // === הצג את החתימה על קנבס התצוגה המקדימה ===
-            var previewCanvas = document.getElementById(id);
-            if (previewCanvas) {
-                var pctx = previewCanvas.getContext("2d");
-                var rect = previewCanvas.getBoundingClientRect();
-                var ratio = window.devicePixelRatio || 1;
-                previewCanvas.width  = rect.width  * ratio;
-                previewCanvas.height = rect.height * ratio;
-                pctx.setTransform(1, 0, 0, 1, 0, 0);
-                pctx.scale(ratio, ratio);
-                var img = new Image();
-                img.onload = function() {
-                    pctx.clearRect(0, 0, rect.width, rect.height);
-                    pctx.drawImage(img, 0, 0, rect.width, rect.height);
-                };
-                img.src = dataURL;
-                window.signaturePads[id].canvas = previewCanvas;
-                window.signaturePads[id].ctx = pctx;
-            }
-
-            var box = document.querySelector('[data-sig-target="' + id + '"]');
-            if (box) box.classList.add("signed");
-            if (typeof closeSignatureModal === 'function') closeSignatureModal();
-        });
-    });
-};
-
-/* ====================================================
-   Signature Modal - Focus Mode
-   ==================================================== */
-var sigModal = (function() {
-    var modal, canvas, ctx, hint, titleEl;
-    var dpr = 1;
-    var targetId = null;
-    var drawing = false;
-    var activePointerId = null;
-    var lastX = 0, lastY = 0;
-    var isEmpty = true;
-    var initialized = false;
-
-    function init() {
-        if (initialized) return;
-        modal   = document.getElementById('signatureModal');
-        canvas  = document.getElementById('sigModalCanvas');
-        hint    = document.getElementById('sigModalHint');
-        titleEl = document.getElementById('sigModalTitle');
-        ctx     = canvas.getContext('2d');
-        attachEvents();
-        initialized = true;
-    }
-
-    function setupCanvas() {
-        var rect = canvas.getBoundingClientRect();
-        dpr = window.devicePixelRatio || 1;
-        if (rect.width <= 0 || rect.height <= 0) return;
-        canvas.width  = Math.max(1, Math.floor(rect.width  * dpr));
-        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.lineWidth = 2.4;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = '#1a1a1a';
-        ctx.fillStyle = '#1a1a1a';
-    }
-
-    function getPos(clientX, clientY) {
-        var rect = canvas.getBoundingClientRect();
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-
-    function startStroke(clientX, clientY) {
-        var p = getPos(clientX, clientY);
-        drawing = true;
-        lastX = p.x;
-        lastY = p.y;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, Math.PI * 2);
-        ctx.fill();
-        if (isEmpty) {
-            isEmpty = false;
-            if (hint) hint.classList.add('hidden');
-        }
-    }
-
-    function extendStroke(clientX, clientY) {
-        if (!drawing) return;
-        var p = getPos(clientX, clientY);
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-        lastX = p.x;
-        lastY = p.y;
-    }
-
-    function endStroke() {
-        drawing = false;
-        activePointerId = null;
-    }
-
-    function onPointerDown(e) {
-        e.preventDefault();
-        if (typeof canvas.setPointerCapture === 'function') {
-            try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
-        }
-        activePointerId = e.pointerId;
-        startStroke(e.clientX, e.clientY);
-    }
-    function onPointerMove(e) {
-        if (!drawing || e.pointerId !== activePointerId) return;
-        e.preventDefault();
-        var events = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e];
-        for (var i = 0; i < events.length; i++) {
-            extendStroke(events[i].clientX, events[i].clientY);
-        }
-    }
-    function onPointerUp(e) {
-        if (e.pointerId !== activePointerId) return;
-        if (typeof canvas.releasePointerCapture === 'function' &&
-            canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
-            try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
-        }
-        endStroke();
-    }
-
-    // Touch + Mouse fallback
-    function onTouchStart(e) { e.preventDefault(); var t = e.changedTouches[0]; startStroke(t.clientX, t.clientY); }
-    function onTouchMove(e)  { if (!drawing) return; e.preventDefault(); var t = e.changedTouches[0]; extendStroke(t.clientX, t.clientY); }
-    function onTouchEnd(e)   { if (e.cancelable) e.preventDefault(); endStroke(); }
-    function onMouseDown(e)  { e.preventDefault(); startStroke(e.clientX, e.clientY); }
-    function onMouseMove(e)  { if (drawing) extendStroke(e.clientX, e.clientY); }
-    function onMouseUp()     { endStroke(); }
-
-    function attachEvents() {
-        // השימוש בציור נעשה כעת דרך window.enableSignatureDrawing
-        // המוצמד מ-initSignatureCanvas. כדי למנוע double-firing אנו לא
-        // מצמידים יותר את ה-handlers הפנימיים.
-    }
-
-    function clearCanvas() {
-        var c = (window.signaturePads && window.signaturePads.current && window.signaturePads.current.canvas) || canvas;
-        var x = (window.signaturePads && window.signaturePads.current && window.signaturePads.current.ctx) || ctx;
-        x.clearRect(0, 0, c.width, c.height);
-        // החזר את סגנון הקו אחרי הניקוי
-        x.lineWidth = 2.4;
-        x.lineCap = "round";
-        x.lineJoin = "round";
-        x.strokeStyle = "#1a1a1a";
+    function clearModalCanvas() {
+        if (!modalCanvas) return;
+        modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+        modalCtx.lineWidth = 2.4;
+        modalCtx.lineCap = 'round';
+        modalCtx.lineJoin = 'round';
+        modalCtx.strokeStyle = '#1a1a1a';
         isEmpty = true;
         if (hint) hint.classList.remove('hidden');
     }
 
-    function open(canvasId, titleText) {
-        init();
-        targetId = canvasId;
-        window.initSignatureCanvas(canvasId);
-        if (titleEl) titleEl.textContent = titleText || 'חתימה דיגיטלית';
+    // === API ציבורי ===
+    window.openSignatureModal = function(targetId) {
+        ensureModalRef();
+        if (!modal || !modalCanvas) return;
+        currentTargetId = targetId;
+        var box = document.querySelector('[data-sig-target="' + targetId + '"]');
+        var canvasInBox = box ? box.querySelector('canvas') : null;
+        var name = canvasInBox && canvasInBox.dataset ? canvasInBox.dataset.name : '';
+        if (titleEl) {
+            titleEl.textContent = name === 'parent' ? 'חתימת ההורה'
+                                : name === 'minor'  ? 'חתימת הקטין/ה'
+                                : 'חתימת המטופל/ת';
+        }
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
-
-        // אתחל את הקנבס בגודל הנכון אחרי שהוא הוצג
+        // המתן ל-2 פריימים כדי שה-modal יוצג ול-getBoundingClientRect יחזיר ממדים אמיתיים
         requestAnimationFrame(function() {
             requestAnimationFrame(function() {
-                isEmpty = true;
-                setupCanvas();
-                clearCanvas();
-                // אם כבר יש חתימה קודמת - טען אותה לתוך המודאל לעריכה
-                var existing = window.signaturePads && signaturePads[targetId];
-                if (existing && existing.isSigned && existing.isSigned()) {
-                    var data = existing.toDataURL();
-                    if (data) {
-                        var img = new Image();
-                        img.onload = function() {
-                            var r = canvas.getBoundingClientRect();
-                            ctx.drawImage(img, 0, 0, r.width, r.height);
-                            isEmpty = false;
-                            if (hint) hint.classList.add('hidden');
-                        };
-                        img.src = data;
-                    }
+                fitCanvas();
+                clearModalCanvas();
+                attachOnce();
+                // טעינת חתימה קיימת לעריכה
+                var existing = window.signaturePads[targetId];
+                if (existing && existing.data) {
+                    var img = new Image();
+                    img.onload = function() {
+                        modalCtx.drawImage(img, 0, 0, modalCanvas.width, modalCanvas.height);
+                        isEmpty = false;
+                        hideHint();
+                    };
+                    img.src = existing.data;
                 }
             });
         });
-    }
+    };
 
-    function close() {
+    window.closeSignatureModal = function() {
+        ensureModalRef();
         if (modal) modal.classList.remove('active');
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
-        targetId = null;
+        currentTargetId = null;
         drawing = false;
-    }
+    };
 
-    function save() { window.saveSignature(); }
+    window.clearModalSignature = function() {
+        clearModalCanvas();
+    };
 
-    return { open: open, close: close, save: save, clear: clearCanvas };
+    window.saveModalSignature = function() {
+        ensureModalRef();
+        if (!modalCanvas || !currentTargetId) return;
+        if (isEmpty) {
+            alert('יש לחתום לפני שמירה');
+            return;
+        }
+        var dataURL = modalCanvas.toDataURL('image/png');
+        if (!dataURL || dataURL === 'data:,') {
+            alert('יש לחתום לפני שמירה');
+            return;
+        }
+        var id = currentTargetId;
+        // שמור את החתימה - אובייקט פשוט עם API תואם לקוד הקיים
+        window.signaturePads[id] = {
+            data: dataURL,
+            isEmpty: false,
+            isSigned: function() { return true; },
+            toDataURL: function() { return dataURL; },
+            clear: function() {
+                window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
+                var prev = document.getElementById(id);
+                if (prev) prev.getContext('2d').clearRect(0, 0, prev.width, prev.height);
+                var b = document.querySelector('[data-sig-target="' + id + '"]');
+                if (b) b.classList.remove('signed');
+            },
+            setupCanvas: function() {}
+        };
+        // הצג בקנבס התצוגה המקדימה
+        var previewCanvas = document.getElementById(id);
+        if (previewCanvas) {
+            var pctx = previewCanvas.getContext('2d');
+            var rect = previewCanvas.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                previewCanvas.width  = Math.floor(rect.width);
+                previewCanvas.height = Math.floor(rect.height);
+                var img = new Image();
+                img.onload = function() {
+                    pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+                    pctx.drawImage(img, 0, 0, previewCanvas.width, previewCanvas.height);
+                };
+                img.src = dataURL;
+            }
+            window.signaturePads[id].canvas = previewCanvas;
+            window.signaturePads[id].ctx = pctx;
+        }
+        // סמן את ה-box ויזואלית
+        var box = document.querySelector('[data-sig-target="' + id + '"]');
+        if (box) box.classList.add('signed');
+        // סגור את המודאל
+        window.closeSignatureModal();
+    };
+
+    // alias-ים לתאימות לאחור
+    window.initSignatureCanvas    = function() {};
+    window.enableSignatureDrawing = function() {};
+    window.saveSignature          = window.saveModalSignature;
 })();
 
-// פונקציות גלובליות עבור הכפתורים שבמודאל
-window.closeSignatureModal = function() { sigModal.close(); };
-window.clearModalSignature = function() { sigModal.clear(); };
-window.saveModalSignature  = function() { window.saveSignature(); };
+// ניקוי כל החתימות (קריאה אחרי הצלחת שליחה)
+window.clearAllSignatures = function() {
+    ['adultSignature', 'parentSignature', 'minorSignature'].forEach(function(id) {
+        if (window.signaturePads[id] && window.signaturePads[id].clear) {
+            window.signaturePads[id].clear();
+        } else {
+            var prev = document.getElementById(id);
+            if (prev) prev.getContext('2d').clearRect(0, 0, prev.width, prev.height);
+            var b = document.querySelector('[data-sig-target="' + id + '"]');
+            if (b) b.classList.remove('signed');
+            window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
+        }
+    });
+};
 
+// אובייקטי ברירת מחדל כדי שולידציה לא תיכשל לפני שנחתם משהו
+['adultSignature', 'parentSignature', 'minorSignature'].forEach(function(id) {
+    if (!window.signaturePads[id]) {
+        window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
+    }
+});
+
+// פונקציה ישנה לשמירת תאימות
 // פונקציה גלובלית - אפשר לקרוא לה מכל מקום
 window.openSignatureModal = function(targetId) {
     if (!targetId) return;
