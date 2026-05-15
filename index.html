@@ -3036,22 +3036,6 @@ window.clearAllSignatures = function() {
     }
 });
 
-// פונקציה ישנה לשמירת תאימות
-// פונקציה גלובלית - אפשר לקרוא לה מכל מקום
-window.openSignatureModal = function(targetId) {
-    if (!targetId) return;
-    var box = document.querySelector('.signature-box[data-sig-target="' + targetId + '"]');
-    var canvas = box ? box.querySelector('.signature-canvas') : null;
-    var titleText = canvas && canvas.dataset.name === 'adult'  ? 'חתימת המטופל/ת' :
-                    canvas && canvas.dataset.name === 'parent' ? 'חתימת ההורה' :
-                    canvas && canvas.dataset.name === 'minor'  ? 'חתימת הקטין/ה' : 'חתימה דיגיטלית';
-    try {
-        sigModal.open(targetId, titleText);
-    } catch (err) {
-        console.error('Failed to open signature modal:', err);
-    }
-};
-
 // === Event delegation - הפתרון הבולטפרוף ===
 // פועל גם אם DOMContentLoaded פספס, גם אם wireSignatureBoxes נכשל,
 // וגם אם אלמנטים נוספים ל-DOM אחרי האתחול
