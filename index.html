@@ -2025,7 +2025,7 @@ window.twoStateToggle = function(targetId, isYes) {
    ==================================================== */
 
 // אובייקט המאחסן את כל מופעי החתימה
-const signaturePads = {};
+var signaturePads = (window.signaturePads = window.signaturePads || {});
 
 /* ====================================================
    1. SignaturePad - Pointer Events primary + ResizeObserver
@@ -3188,9 +3188,4 @@ if (document.readyState === 'loading') {
     </div>
     <div class="signature-modal-actions">
         <button type="button" class="btn-clear" onclick="clearModalSignature()">נקה חתימה</button>
-        <button type="button" class="btn-save" onclick="saveModalSignature()">שמור חתימה</button>
-    </div>
-</div>
-
-</body>
-</html>
+        <button type="button" class="btn-save" onclick="saveModalSignature()">שמור חתימ

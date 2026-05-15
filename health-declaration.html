@@ -2025,7 +2025,7 @@ window.twoStateToggle = function(targetId, isYes) {
    ==================================================== */
 
 // אובייקט המאחסן את כל מופעי החתימה
-const signaturePads = {};
+var signaturePads = (window.signaturePads = window.signaturePads || {});
 
 /* ====================================================
    1. SignaturePad - Pointer Events primary + ResizeObserver
