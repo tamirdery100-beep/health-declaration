@@ -3004,24 +3004,52 @@ window.signaturePads = window.signaturePads || {};
             return;
         }
         var id = currentTargetId;
+        var existing = window.signaturePads[id];
 
-        // === שמור את האובייקט עם API תואם לוולידציה ולשליחה ===
-        window.signaturePads[id] = {
-            data: dataURL,
-            isEmpty: false,
-            isSigned: function() { return true; },
-            toDataURL: function() { return dataURL; },
-            clear: function() {
-                window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
+        // === בטל את ה-ResizeObserver הקיים על קנבס התצוגה המקדימה ===
+        // אחרת גלילה במובייל (address bar show/hide) תפעיל setupCanvas ותמחק את החתימה
+        if (existing && existing._resizeObserver && typeof existing._resizeObserver.disconnect === 'function') {
+            try { existing._resizeObserver.disconnect(); existing._resizeObserver = null; } catch (_) {}
+        }
+
+        // === עדכן את ה-SignaturePad הקיים במקום לדרוס ===
+        // ככה ה-canvas reference + visualization נשמרים, רק ה-state מתעדכן
+        if (existing && typeof existing.setupCanvas === 'function' && existing.canvas) {
+            existing.data = dataURL;
+            existing.isEmpty = false;
+            existing.isSigned  = function() { return true; };
+            existing.toDataURL = function() { return dataURL; };
+            // overwrite setupCanvas: מקנה הגנה - לא יאפס יותר את הקנבס
+            existing.setupCanvas = function() {};
+            existing.clear = function() {
+                existing.isEmpty  = true;
+                existing.isSigned = function() { return false; };
+                existing.toDataURL = function() { return null; };
+                existing.data = null;
                 var prev = document.getElementById(id);
                 if (prev) {
                     try { prev.getContext('2d').clearRect(0, 0, prev.width, prev.height); } catch (_) {}
                 }
                 var b = document.querySelector('[data-sig-target="' + id + '"]');
                 if (b) b.classList.remove('signed');
-            },
-            setupCanvas: function() {}
-        };
+            };
+        } else {
+            // Fallback - לא אמור לקרות, אבל ליתר ביטחון
+            window.signaturePads[id] = {
+                data: dataURL,
+                isEmpty: false,
+                isSigned: function() { return true; },
+                toDataURL: function() { return dataURL; },
+                clear: function() {
+                    window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
+                    var prev = document.getElementById(id);
+                    if (prev) { try { prev.getContext('2d').clearRect(0, 0, prev.width, prev.height); } catch (_) {} }
+                    var b = document.querySelector('[data-sig-target="' + id + '"]');
+                    if (b) b.classList.remove('signed');
+                },
+                setupCanvas: function() {}
+            };
+        }
 
         // === סמן את ה-box ויזואלית (לפני הציור על הקנבס) ===
         var box = document.querySelector('[data-sig-target="' + id + '"]');
