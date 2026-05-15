@@ -2955,20 +2955,57 @@ window.signaturePads = window.signaturePads || {};
         clearModalCanvas();
     };
 
+    function canvasHasInk(canvas) {
+        try {
+            var c = canvas.getContext('2d');
+            var w = canvas.width, h = canvas.height;
+            if (w === 0 || h === 0) return false;
+            // בדוק כל פיקסל רביעי לטובת ביצועים
+            var data = c.getImageData(0, 0, w, h).data;
+            for (var i = 3; i < data.length; i += 16) { // כל פיקסל רביעי
+                if (data[i] !== 0) return true;
+            }
+            // בדיקת fallback - בדוק את כל הפיקסלים אם הקודם לא מצא
+            for (var i = 3; i < data.length; i += 4) {
+                if (data[i] !== 0) return true;
+            }
+            return false;
+        } catch (e) {
+            // אם getImageData נכשל - חזור לבדיקה דרך dataURL length
+            try {
+                var url = canvas.toDataURL('image/png');
+                return !!url && url.length > 1500;
+            } catch (_) {
+                return false;
+            }
+        }
+    }
+
     window.saveModalSignature = function() {
         ensureModalRef();
-        if (!modalCanvas || !currentTargetId) return;
-        if (isEmpty) {
+        if (!modalCanvas || !currentTargetId) {
+            alert('בעיה בפתיחת מערכת החתימה. רענן/י את הדף ונסה/י שוב.');
+            return;
+        }
+        // בדוק אם יש בכלל ציור על הקנבס (לא מסתמכים על isEmpty flag)
+        if (!canvasHasInk(modalCanvas)) {
             alert('יש לחתום לפני שמירה');
             return;
         }
-        var dataURL = modalCanvas.toDataURL('image/png');
+        var dataURL;
+        try {
+            dataURL = modalCanvas.toDataURL('image/png');
+        } catch (e) {
+            alert('שגיאה בשמירת החתימה. נסה/י שוב.');
+            return;
+        }
         if (!dataURL || dataURL === 'data:,') {
             alert('יש לחתום לפני שמירה');
             return;
         }
         var id = currentTargetId;
-        // שמור את החתימה - אובייקט פשוט עם API תואם לקוד הקיים
+
+        // === שמור את האובייקט עם API תואם לוולידציה ולשליחה ===
         window.signaturePads[id] = {
             data: dataURL,
             isEmpty: false,
@@ -2977,34 +3014,41 @@ window.signaturePads = window.signaturePads || {};
             clear: function() {
                 window.signaturePads[id] = { isEmpty: true, isSigned: function() { return false; }, toDataURL: function() { return null; } };
                 var prev = document.getElementById(id);
-                if (prev) prev.getContext('2d').clearRect(0, 0, prev.width, prev.height);
+                if (prev) {
+                    try { prev.getContext('2d').clearRect(0, 0, prev.width, prev.height); } catch (_) {}
+                }
                 var b = document.querySelector('[data-sig-target="' + id + '"]');
                 if (b) b.classList.remove('signed');
             },
             setupCanvas: function() {}
         };
-        // הצג בקנבס התצוגה המקדימה
-        var previewCanvas = document.getElementById(id);
-        if (previewCanvas) {
-            var pctx = previewCanvas.getContext('2d');
-            var rect = previewCanvas.getBoundingClientRect();
-            if (rect.width > 0 && rect.height > 0) {
-                previewCanvas.width  = Math.floor(rect.width);
-                previewCanvas.height = Math.floor(rect.height);
-                var img = new Image();
-                img.onload = function() {
-                    pctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-                    pctx.drawImage(img, 0, 0, previewCanvas.width, previewCanvas.height);
-                };
-                img.src = dataURL;
-            }
-            window.signaturePads[id].canvas = previewCanvas;
-            window.signaturePads[id].ctx = pctx;
-        }
-        // סמן את ה-box ויזואלית
+
+        // === סמן את ה-box ויזואלית (לפני הציור על הקנבס) ===
         var box = document.querySelector('[data-sig-target="' + id + '"]');
         if (box) box.classList.add('signed');
-        // סגור את המודאל
+
+        // === העתק את הציור לקנבס התצוגה המקדימה - סינכרוני, ישירות ===
+        var previewCanvas = document.getElementById(id);
+        if (previewCanvas) {
+            try {
+                var pctx = previewCanvas.getContext('2d');
+                var rect = previewCanvas.getBoundingClientRect();
+                if (rect.width > 0 && rect.height > 0) {
+                    previewCanvas.width  = Math.floor(rect.width);
+                    previewCanvas.height = Math.floor(rect.height);
+                    // ציור ישיר מהקנבס של המודאל - בלי Image() async
+                    pctx.drawImage(modalCanvas, 0, 0, modalCanvas.width, modalCanvas.height,
+                                                0, 0, previewCanvas.width, previewCanvas.height);
+                }
+                window.signaturePads[id].canvas = previewCanvas;
+                window.signaturePads[id].ctx = pctx;
+            } catch (e) {
+                // ציור לתצוגה נכשל אבל החתימה עצמה שמורה ב-dataURL
+                console.warn('Preview render failed:', e);
+            }
+        }
+
+        // === סגור את המודאל ===
         window.closeSignatureModal();
     };
 
