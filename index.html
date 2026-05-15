@@ -1,0 +1,3222 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הצהרת בריאות לטיפול קוסמטי | Alya Berkovich</title>
+
+    <!-- ייבוא פונט עברי נעים מ-Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================
+           משתנים גלובליים - פלטת צבעים מינימליסטית
+           ============================================ */
+        :root {
+            --primary: #1a1a1a;
+            --primary-light: #2d2d2d;
+            --accent: #c9a87a;
+            --accent-dark: #a8895e;
+            --bg: #fafafa;
+            --bg-card: #ffffff;
+            --border: #e8e8e8;
+            --border-focus: #1a1a1a;
+            --text: #1a1a1a;
+            --text-muted: #6b6b6b;
+            --error: #d63b3b;
+            --success: #2d8a4e;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.08);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        /* ============================================
+           איפוס כללי
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Assistant', 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+            direction: rtl;
+            text-align: right;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================
+           קונטיינר ראשי
+           ============================================ */
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 32px 20px 60px;
+        }
+
+        /* ============================================
+           לוגו וכותרת
+           ============================================ */
+        .header {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 40px 20px 30px;
+        }
+
+        .logo-wrap {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .logo-wrap img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+        }
+
+        /* Placeholder ללוגו אם אין תמונה */
+        .logo-placeholder {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 4px;
+            font-family: 'Heebo', serif;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            margin-top: 16px;
+        }
+
+        .header .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        /* ============================================
+           כרטיסי תוכן
+           ============================================ */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+        }
+
+        .card-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: -16px;
+            margin-bottom: 20px;
+        }
+
+        /* ============================================
+           שדות טופס
+           ============================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 18px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        label .required {
+            color: var(--error);
+            margin-right: 4px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text);
+            background: #fff;
+            transition: all 0.2s ease;
+            direction: rtl;
+            text-align: right;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(26,26,26,0.06);
+        }
+
+        input.error,
+        textarea.error,
+        select.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(214,59,59,0.08);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* ============================================
+           Radio Buttons
+           ============================================ */
+        .radio-group {
+            display: flex;
+            gap: 24px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+            padding: 8px 4px;
+            min-height: 36px;
+            /* קריטי למובייל: ביטול ה-300ms delay של iOS/Android, וטאפ ללא הילה אפורה */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .radio-option input[type="radio"] {
+            /* הקלט מכסה את כל ה-label כדי שכל לחיצה במובייל
+               תפגע בקלט עצמו, ולא תסתמך על מעבר label→input.
+               NB: לא מסירים appearance בכוונה - iOS צריך את ה-input
+               כ"רדיו אמיתי" כדי שטוגל יעבוד. opacity:0 מסתיר אותו. */
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+            touch-action: manipulation;
+        }
+
+        .radio-custom {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            margin-left: 8px;
+            transition: all 0.2s;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .radio-option:hover .radio-custom {
+            border-color: var(--primary);
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-custom {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        .radio-label {
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ============================================
+           שאלה עם תשובת Yes/No בשורה אחת
+           ============================================ */
+        .question-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .question-row:last-child {
+            border-bottom: none;
+        }
+
+        .question-row .q-text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 500;
+            min-width: 200px;
+        }
+
+        .question-row .radio-group {
+            margin-top: 0;
+        }
+
+        /* ============================================
+           שדות מותנים (פירוט)
+           ============================================ */
+        .conditional {
+            display: none;
+            margin-top: 10px;
+            padding-right: 16px;
+            border-right: 3px solid var(--accent);
+            animation: slideDown 0.25s ease-out;
+        }
+
+        .conditional.active {
+            display: block !important;
+        }
+
+        /* === Pure-CSS fallback (ללא JS) ===
+           עובד באמצעות :has() - iOS Safari 15.4+, Chrome 105+
+           אם ה-JS לא רץ מסיבה כלשהי - זה עדיין יעבוד
+           הכלל אומר: כש"כן" של data-toggle נבחר בתוך form-group
+           → הצג את ה-conditional באותו form-group */
+        .form-group:has(> .question-row input[type="radio"][value="כן"][data-toggle]:checked) > .conditional,
+        .form-group:has(.question-row input[type="radio"][value="כן"][data-toggle]:checked) > .conditional {
+            display: block !important;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           הנחיות לאחר טיפול
+           ============================================ */
+        .guidelines {
+            background: linear-gradient(135deg, #faf6f0 0%, #fff8ed 100%);
+            border-right: 4px solid var(--accent);
+        }
+
+        .guidelines ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guidelines li {
+            padding: 12px 0 12px 0;
+            padding-right: 28px;
+            position: relative;
+            font-size: 15px;
+            line-height: 1.7;
+            border-bottom: 1px dashed rgba(168, 137, 94, 0.2);
+        }
+
+        .guidelines li:last-child {
+            border-bottom: none;
+        }
+
+        .guidelines li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            top: 12px;
+            color: var(--accent-dark);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .guidelines-intro {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 14px;
+            font-size: 16px;
+        }
+
+        /* ============================================
+           הצהרת מטופל
+           ============================================ */
+        .declaration-text {
+            background: #f7f7f5;
+            padding: 24px;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .declaration-text p {
+            margin-bottom: 14px;
+        }
+
+        .declaration-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ============================================
+           אזור חתימה
+           ============================================ */
+        .signature-section {
+            margin-top: 16px;
+        }
+
+        .signature-box {
+            border: 2px dashed #c0c0c0;
+            border-radius: var(--radius-sm);
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .signature-canvas {
+            display: block;
+            width: 100%;
+            height: 200px;
+            cursor: crosshair;
+            background: #fff;
+            touch-action: none;
+            -ms-touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .signature-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #c0c0c0;
+            font-size: 14px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .signature-placeholder.hidden {
+            display: none;
+        }
+
+        .signature-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .clear-btn {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .clear-btn:hover {
+            border-color: var(--primary);
+            background: #f5f5f5;
+        }
+
+        .signature-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           אזור הקטין - מודגש
+           ============================================ */
+        .minor-section {
+            display: block;
+            background: #fffaf3;
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            margin-top: 20px;
+        }
+
+        .minor-section h3 {
+            color: var(--accent-dark);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1.5px solid rgba(168, 137, 94, 0.3);
+        }
+
+        /* ============================================
+           כפתור שליחה
+           ============================================ */
+        .submit-section {
+            text-align: center;
+            margin-top: 32px;
+            padding: 24px 0;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 16px 56px;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+            transition: all 0.25s;
+            box-shadow: var(--shadow-md);
+            min-width: 220px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           הודעות מערכת
+           ============================================ */
+        .alert {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .alert.active {
+            display: block;
+        }
+
+        .alert.error {
+            background: #fdf2f2;
+            color: #b22929;
+            border: 1px solid #f5c2c2;
+        }
+
+        .alert.success {
+            background: #f0f9f4;
+            color: #1e6b3a;
+            border: 1px solid #b4dec3;
+        }
+
+        /* ============================================
+           מסך הצלחה
+           ============================================ */
+        .success-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .success-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .success-modal-content {
+            background: #fff;
+            padding: 48px 40px;
+            border-radius: 16px;
+            max-width: 460px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0f9f4;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            color: var(--success);
+        }
+
+        .success-modal h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .success-modal p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .success-modal button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 32px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           הערות וטיפים קטנים
+           ============================================ */
+        .field-hint {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ============================================
+           רספונסיביות - מובייל
+           ============================================ */
+        @media (max-width: 720px) {
+            .container {
+                padding: 20px 14px 50px;
+            }
+
+            .header {
+                padding: 24px 10px 20px;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .card {
+                padding: 22px 18px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .question-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .question-row .radio-group {
+                gap: 20px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 15px 24px;
+            }
+
+            .signature-canvas {
+                height: 170px;
+            }
+
+            .declaration-text {
+                padding: 18px 16px;
+                font-size: 14px;
+            }
+
+            .logo-placeholder {
+                width: 140px;
+                height: 140px;
+                font-size: 38px;
+            }
+        }
+
+        /* ============================================
+           הדפסה
+           ============================================ */
+        @media print {
+            body { background: #fff; }
+            .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+            .submit-section { display: none; }
+        }
+
+        /* ============================================
+           שדרוגי UI/UX מודרניים
+           ============================================ */
+
+        /* === הגנת מובייל בסיסית === */
+        html, body {
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+        @media (max-width: 720px) {
+            input, select, textarea {
+                font-size: 16px !important; /* מונע auto-zoom ב-iOS */
+            }
+        }
+
+        /* === Loading Overlay === */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 99998;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .loading-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .loading-spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid rgba(26, 26, 26, 0.12);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-text {
+            margin-top: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.3px;
+        }
+
+        /* === Error Modal (חדש - מעוצב ככה שיתאים ל-successModal) === */
+        .error-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .error-modal.active { display: flex; }
+        .error-modal-content {
+            background: #fff;
+            padding: 44px 36px 36px;
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease-out;
+        }
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: #fdecea;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 44px;
+            color: var(--error);
+            font-weight: 700;
+        }
+        .error-modal h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        .error-modal p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .error-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .error-modal-actions button {
+            padding: 12px 26px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.15s, box-shadow 0.2s;
+            min-height: 44px;
+        }
+        .error-modal-actions .btn-retry {
+            background: var(--primary);
+            color: #fff;
+        }
+        .error-modal-actions .btn-cancel {
+            background: #f0f0f0;
+            color: var(--text);
+        }
+        .error-modal-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* === Submit Button - שדרוג מודרני === */
+        .submit-btn {
+            background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+            border-radius: 14px;
+            min-height: 52px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+        .submit-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2d2d2d 0%, #4a4a4a 100%);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.22);
+        }
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+        @media (max-width: 720px) {
+            .submit-btn { width: 100%; min-height: 56px; font-size: 18px; border-radius: 16px; }
+        }
+
+        /* === Inline field error (מתחת לשדה לא תקין) === */
+        .field-error-msg {
+            display: none;
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        .field-error-msg.show { display: block; animation: slideDown 0.2s ease-out; }
+        input.error, textarea.error, select.error {
+            border-color: var(--error) !important;
+            box-shadow: 0 0 0 3px rgba(214,59,59,0.10) !important;
+            animation: shakeField 0.4s ease;
+        }
+        @keyframes shakeField {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* === Conditional smoother transition === */
+        .conditional {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        /* === Touch targets - לפחות 44px === */
+        .clear-btn { min-height: 44px; padding: 10px 18px; border-radius: 10px; }
+        button { -webkit-tap-highlight-color: transparent; }
+
+        /* === Card hover עדין על דסקטופ === */
+        @media (hover: hover) {
+            .card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+            .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        }
+
+    
+        /* === Animated success icon === */
+        .success-svg-wrap {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-svg {
+            width: 90px;
+            height: 90px;
+            overflow: visible;
+        }
+        .success-circle {
+            stroke-dasharray: 226;
+            stroke-dashoffset: 226;
+            transform-origin: center;
+            transform: scale(0.4);
+            opacity: 0;
+        }
+        .success-check {
+            stroke-dasharray: 80;
+            stroke-dashoffset: 80;
+        }
+        .success-modal.active .success-circle {
+            animation: circleScale 0.45s cubic-bezier(0.65, 0, 0.45, 1) forwards,
+                       circleDraw 0.65s 0.2s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        .success-modal.active .success-check {
+            animation: checkDraw 0.4s 0.65s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        @keyframes circleScale {
+            0%   { transform: scale(0.4); opacity: 0; }
+            100% { transform: scale(1);   opacity: 1; }
+        }
+        @keyframes circleDraw {
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes checkDraw {
+            to { stroke-dashoffset: 0; }
+        }
+    
+        /* === Age notice (above signature) === */
+        .age-notice {
+            padding: 14px 18px;
+            background: #f7f5f0;
+            border-right: 4px solid var(--accent);
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            transition: background 0.25s ease, border-color 0.25s ease;
+        }
+        .age-notice.minor {
+            background: #fff5e6;
+            border-right-color: #e0a050;
+            color: #6b3f10;
+            font-weight: 600;
+        }
+    
+        /* === Signature preview area (tap to open modal) === */
+        .signature-canvas {
+            pointer-events: none; /* drawing happens in modal, not here */
+        }
+        .signature-box {
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* קריטי: לחיצה תמיד עוברת לבוקס + z-index גבוה */
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 10;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.04);
+        }
+        /* כל התוכן הפנימי חייב להעביר את הלחיצה לבוקס */
+        .signature-box > * {
+            pointer-events: none;
+        }
+        .signature-signed-badge {
+            pointer-events: none;
+        }
+        .signature-box:hover {
+            border-color: var(--primary);
+            background: #fafafa;
+        }
+        .signature-box:active {
+            transform: scale(0.995);
+        }
+        .signature-box.signed {
+            border-style: solid;
+            border-color: var(--success);
+            background: #f6fbf7;
+        }
+        .signature-tap-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
+            pointer-events: none;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .signature-tap-hint .tap-icon {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+        .signature-box.signed .signature-tap-hint {
+            display: none;
+        }
+        .signature-box.signed .signature-placeholder {
+            display: none;
+        }
+        .signature-signed-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--success);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: none;
+            z-index: 2;
+        }
+        .signature-box.signed .signature-signed-badge {
+            display: block;
+        }
+        /* Hide inline clear/hint controls (they live inside modal now) */
+        .signature-controls { display: none !important; }
+
+        /* === Signature Modal === */
+        .signature-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: none;
+            flex-direction: column;
+            z-index: 100000;
+            padding: 16px;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .signature-modal.active { display: flex; }
+        .signature-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 10px 6px;
+        }
+        .sig-modal-close {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            font-family: inherit;
+            line-height: 1;
+        }
+        .signature-modal-canvas-wrap {
+            flex: 1;
+            background: #fff;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+            margin: 8px 0;
+            animation: sigCanvasIn 0.25s ease-out;
+        }
+        @keyframes sigCanvasIn {
+            from { transform: scale(0.97); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+        #sigModalCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+            -ms-touch-action: none;
+            cursor: crosshair;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .sig-modal-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #c0c0c0;
+            font-size: 16px;
+            pointer-events: none;
+            user-select: none;
+        }
+        .sig-modal-hint.hidden { display: none; }
+        .signature-modal-actions {
+            display: flex;
+            gap: 10px;
+            padding: 4px 0 6px;
+        }
+        .signature-modal-actions button {
+            flex: 1;
+            min-height: 52px;
+            border-radius: 14px;
+            border: 0;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+        }
+        .signature-modal-actions .btn-clear {
+            background: rgba(255,255,255,0.92);
+            color: #1a1a1a;
+        }
+        .signature-modal-actions .btn-save {
+            background: linear-gradient(135deg, #2d8a4e 0%, #3aa861 100%);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(45,138,78,0.35);
+        }
+        .signature-modal-actions button:active {
+            transform: translateY(1px);
+        }
+        @media (max-width: 720px) {
+            .signature-modal { padding: 10px; }
+            .signature-modal-actions { padding-bottom: env(safe-area-inset-bottom, 6px); }
+        }
+        </style>
+<script>
+/* Bulletproof inline-toggle - מוגדר ב-head כדי שיהיה זמין מיד.
+   ES5 בלבד - עובד בכל דפדפן: iOS Safari ישן, Android WebView, הכל. */
+window.twoStateToggle = function(targetId, isYes) {
+    var target = document.getElementById(targetId);
+    if (!target) return;
+    if (isYes) {
+        target.classList.add('active');
+        target.style.display = 'block';
+    } else {
+        target.classList.remove('active');
+        target.style.display = '';
+        var inputs = target.querySelectorAll('input, textarea');
+        for (var i = 0; i < inputs.length; i++) {
+            var el = inputs[i];
+            if (el.type !== 'radio' && el.type !== 'checkbox') el.value = '';
+            else el.checked = false;
+        }
+    }
+};
+</script>
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+    (function() {
+        if (typeof emailjs !== 'undefined' && emailjs.init) {
+            emailjs.init("2Ve3-vsksY5BNYGsi");
+        } else {
+            // Fallback if SDK loads late
+            window.addEventListener('load', function() {
+                if (typeof emailjs !== 'undefined' && emailjs.init) {
+                    emailjs.init("2Ve3-vsksY5BNYGsi");
+                }
+            });
+        }
+    })();
+</script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ============================================
+         אזור לוגו וכותרת
+         ============================================ -->
+    <header class="header">
+        <div class="logo-wrap">
+            <!-- אם יש לך תמונת לוגו, החלף את ה-placeholder ב:
+                 <img src="logo.png" alt="Alya Berkovich"> -->
+            <img id="logoImage" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wgARCAWeBZ4DASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAQL/xAAVAQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEAMQAAACs4gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf/9oADAMBAAIAAwAAACEIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII4444IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILhjBwoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJYRARAIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJrBjBgYIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKoxARAQIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIbpBjBjA4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJaI5ARAQQIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIaIIJjBjAgoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIoJJARARA4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJYIIJLBjBiAoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIY4IIJIRARASoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKIIIIJBjBjDgIIIII4444444444444IoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILaIIIIIJARARQIIIIIIJwxARARAQIILKJCgSQI4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIZoIIIIJZDBjBioIIIIIIKJDBjBjQIIIIILLxjAgY4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILARARBAIIIIIIILgRARBQIIIIIIIJgRAQC4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILqIIIIIILLBjBiAIIIIIIILDBjBjQIIIIIIIIbBjBiAoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIYwwwwwwwwxwwwwwwwwwzzzzzywwwwwwwzzzzzzwwwwwwwwwxzzzzzwwwwwwww4IIIIIIIIIIIIIIIIIIIIIIIIIIIJbzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwIIIIIIIIIIIIIIIIIIIIIIIIIIIJTzzzzzzzjzzjzzzjzzzTzzzzjDzzTzzjDzzTzzjDzzTzzzTzzzTzjzzzzzzzzwIIIIIIIIIIIIIIIIIIIIIIIIIIIJbzzzzzzxhTzzzyx7zzzDzzzzjbTzxTzyTzzJzxAzzyyDzzzyjSzzgRTzzzzzzwIIIIIIIIIIIIIIIIIIIIIIIIIIIJTzzzzzzjzDyhDzyjzxzzzzzyjRzyBzzgjzyBzzgDzywzzzTyzBzyghzzzzzzzwIIIIIIIIIIIIIIIIIIIIIIIIIIIJbzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzwIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJLz7b7b7b7b7b7bzDTDSQIIIILjTDTCQIIIIIIIIIbDTDTCIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILIIIIIIIIIIIIILZjBjBgoIIIJDBjBjQIIIIIIIILhjBjAiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIZ4IIIIIIIIIIIIIJARARAoIIILgRARBQIIIIIIIIaxARAQIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIoIIIIIIIIIIIIILDBjBiAoIIJDBjBjQIIIIIIIILBjBxoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKIIIIIIIIIIIIIIIIYRARASoIILgRARBQIIIIIIIJARQCIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILhjBjDgIIJDBjBjAIIY4IIjBiLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKIIIIIIIIIIIIIIIIKRARAQAIILgRARBSKKKKKLoAAQ4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJ4IIIIIIIIIIIIIIIIJJjBjBioIJDBjBjQIIIIIIJKLBiBgYIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIZIIIIIIIIIIIIIIIIIJJARARBAILgRARBQIIIIIIIILZARAS4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJIoIIIIIIIIIIIIIIIIILjBjBiAoJDBjBjQIIIIIIIIILjBjAgoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILCIIIIIIIIIIIIIIIIIIJoRARAQYLgRARBQIIIIIIIIIIYRARBQoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKphAoIIIIIIIIIIIIIIIIZDBjBjAgJDBjBjQIIIIIIIIIJLBjBjA4IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILLJKABABAKLLIIIIIIIIJbLILBABABABADgRARBQIIIIIIIIIJKxARAQAIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJDBjBjQIIIIIIIIIILhjBjAwoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILgRARBQIIIIIIIIIIKxARARCIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKJqroKJIIK4IKpYpYaLZbLILopaJ446rooJDBjBjQIIIIIIIIIIJBjBjBgoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIKLKLILLJKKIIKJKKIILJKJIIKJKIJJLJIILgRARBQIIIIIIIIIIKxARAQCIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJDBjBjQIIIIIIIIIJZBjBjAgIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILgRARBQIIIIIIIIIIIRARAToIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJDBjBjQIIIIIIIIIJrBjBjCIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJARARBQIIIIIIIIIbARARQoIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILjBjBjQIIIIIIIIJpjBjRIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILARARBQIIIIIIIboRAhqIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIYI5hBjBjBjQIIIIo5TxjYIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIJLLLLLLLLLLLLLLKKIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIL/2gAMAwEAAgADAAAAEAggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggrJDMAggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggguLOLCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggmjJDJOggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggnuLOLLCgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggmrJDJDCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggiourOLOOAgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggjghpDJDJCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggligkjOLOLLggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggnoggjjJDJHAgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghtgggluLOLOCgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghggggkhJDJDAAggghigigigigigigihhggggggggggggggggggggggggggggggggggggggggggggggggggggggggggpgggggsrOLOKAggggoshMLOLOLPMsoghoDGOBiggggggggggggggggggggggggggggggggggggggggggggggggggggiggggglpDJDJDgggggggtpDJDJHAgggggoqJDJKgggggggggggggggggggggggggggggggggggggggggggggggggggoggggggjOLOLOAgggggggrOLOLPAggggggkpOLOPKggggggggggggggggggggggggggggggggggggggggggggggggqoggggggtjJDJHCgggggggpDJDJHAggggggggjJDJHBgggggggggggggggggggggggggggggggggggghjDDDDDDDDHDDDDDDDDHDDDDDDDDDDDDDDDDDDHDDDDDDDDDDDDDDDDDDDDDDDgggggggggggggggggggggggggggglvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPAggggggggggggggggggggggggggglPPPPPPPOPPOPPPONPPNPPPPOMPPPNPPNPPNPPOMPPPONPOPPPNPOPPPPPPPPPAggggggggggggggggggggggggggglvPPPPPPAHPPPPLAnPONPPPPLLtPANPKHPPI/PBDNPLJHPFPOJDPLGFPPPPPPPAggggggggggggggggggggggggggglPPPPPPPDFPLIPPBPPFGPPPPOHPPGNPLEPPNNPDEHPPHPPGPLGPPOEFPPPPPPPAggggggggggggggggggggggggggglvPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPAgggggggggggggggggggggggggggggggggggltPtvtvtvtvtvtuPOPOOAggggvOPOPLAgggggggghvOPOPCgggggggggggggggggggggggggggggggggggggggggggviggggggggggggppDJDNKgggghDJDJHAgggggggghJDJDMAgggggggggggggggggggggggggggggggggggggggggghtggggggggggggglpOLOLAggggrOLOLPAggggggghmLOLPMggggggggggggggggggggggggggggggggggggggggggghoggggggggggggggrDJDJGCggghDJDJHAggggggghjJDIAggggggggggggggggggggggggggggggggggggggggggggogggggggggggggggguLOLOCgggrOLOLPAgggggghjOLJAgggggggggggggggggggggggggggggggggggggggggggggvggggggggggggggghhJDJDEAgghDJDJHAghihjkDJGogggggggggggggggggggggggggggggggggggggggggggggggoggggggggggggggggkLOLOPCggrOLOLLIoookonuPKBigggggggggggggggggggggggggggggggggggggggggggggqogggggggggggggggglpDJDJBgghDJDJHAggggggktjJHADggggggggggggggggggggggggggggggggggggggggggghgggggggggggggggggkrOLOLOAgrOLOLPAggggggggprOLKBgggggggggggggggggggggggggggggggggggggggggioggggggggggggggggggrDJDJHKghDJDJHAgggggggggpDJDJCggggggggggggggggggggggggggggggggggggggggpKggggggggggggggggggjuLOLOGgrOLOLPAgggggggggsuLOLOCggggggggggggggggggggggggggggggggggggggtpKCgggggggggggggggghhDJDJDNChDJDJHAgggggggggljJDJDAggggggggggggggggggggggggggggggggggmskkMIMEMoksoggggggghssgkIMIMIMIIJOLOLPAggggggggggkLOLOKAgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghDJDJHAgggggggggghJDJDJCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggrOLOLPAggggggggggkLOLOLKgggggggggggggggggggggggggggggggkouqvgiiggsgiqhijhqutvjgvikgklqkgvghDJDJHAggggggggggrJDJDJKggggggggggggggggggggggggggggggggosgkgssggkggoggggggookgogkogokkokgrOLOLPAggggggggggmLOLOOIgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghDJDJHAggggggggghjJDJDJAggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggrOLOLPAgggggggggluLOLOCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghDJDJHAggggggggghjJDJCAgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggrOLOLPAgggggggggpOLOLIgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghDJDJHAgggggggghpDJDCggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggkjOLOLPAgggggggrmLPKoggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggjgtLJDJDJHDjjjinsLJGsogggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggkggggggggggggggkggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggv/EAB0RAQEBAAICAwAAAAAAAAAAABEAEDCAAaAgkLD/2gAIAQIBAT8A/MK89fXp+YYYYYYYYcBhhhwGGGHAYYYd6mZmZmZmZ+jN9esjhIiIj4Pu/f/EABQRAQAAAAAAAAAAAAAAAAAAAMD/2gAIAQMBAT8AfSf/xABREAAABAIDCAwMBAYCAQMFAAABAgMEAAUGERITFBUhIjAxVCAyNUFRUnFykaKx0RBAQlNgYXCBkpOhwSMzc/AWJDRQYoJDY0Sy4fGAg5DA0P/aAAgBAQABPwL/APgpBjAQomNiAMYx/FLTzK/074/ilp5lf6d8fxS08yv9O+P4paeZX+nfH8UtPMr/AE74/ilp5lf6d8MXRHjUi6Vdk3D7LaUOr3lRyhtlcjv2dDHWJZqYf8y/f2W0vc3WYAiG1RD6j+w2cqdXnMEVt4ByuT2WLqFRROofakC0MOFTLrqKn2xxtDmKOOr6lSdY5aeQPsrpc5uMuBINssNXuzND3VyfGQMOSqGLlD2V0pc3xNDEDapBY9+/mW6pkF01SbYg2ghBUq6JFSbU4Wg9lLxcGzVVY2gha4OYTnMYw1mMNY5qiDq6sDIGHKRH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" alt="Alya Berkovich Logo">
+            <div id="logoFallback" class="logo-placeholder" style="display:none;">AB</div>
+        </div>
+        <h1>הצהרת בריאות לטיפול קוסמטי</h1>
+        <p class="subtitle">אנא מלא/י את הטופס בדיוק ובכנות לצורך התאמת הטיפול המקצועי ביותר</p>
+    </header>
+
+    <!-- אזור התראות -->
+    <div id="errorAlert" class="alert error"></div>
+
+    <form id="healthForm" novalidate>
+
+        <!-- ============================================
+             שלב 1: פרטים אישיים
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">פרטים אישיים</div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fullName">שם מלא <span class="required">*</span></label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">טלפון נייד <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">עיר</label>
+                    <input type="text" id="city" name="city">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate">תאריך לידה</label>
+                    <input type="date" id="birthDate" name="birthDate">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">אימייל <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+<div class="form-group">
+                    <label for="occupation">עיסוק</label>
+                    <input type="text" id="occupation" name="occupation">
+                </div>
+
+                <div class="form-group">
+                    <label for="age">גיל <span class="required">*</span></label>
+                    <input type="number" id="age" name="age" min="1" max="120" required>
+                    <div class="field-hint">השדה משפיע על אופן החתימה (קטין/בגיר)</div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>מין</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="זכר">
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">זכר</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="נקבה">
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">נקבה</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             שלב 1: שאלון בריאות - שאלות פתוחות
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">שאלון בריאות כללי</div>
+
+            <!-- ריפוי פצעים -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת מבעיות בריפוי פצעים או הצטלקות?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="wound_healing" value="כן" data-toggle="wound_healing_detail" onclick="twoStateToggle('wound_healing_detail',true)" onchange="twoStateToggle('wound_healing_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="wound_healing" value="לא" data-toggle="wound_healing_detail" onclick="twoStateToggle('wound_healing_detail',false)" onchange="twoStateToggle('wound_healing_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="wound_healing_detail">
+                    <label for="wound_healing_text">פרט/י את בעיית ריפוי הפצעים / ההצטלקות</label>
+                    <textarea id="wound_healing_text" name="wound_healing_text"></textarea>
+                </div>
+            </div>
+
+            <!-- הרפס/גירוי -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת מהרפס/גירוי? אם כן, באילו אזורים?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="herpes" value="כן" data-toggle="herpes_detail" onclick="twoStateToggle('herpes_detail',true)" onchange="twoStateToggle('herpes_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="herpes" value="לא" data-toggle="herpes_detail" onclick="twoStateToggle('herpes_detail',false)" onchange="twoStateToggle('herpes_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="herpes_detail">
+                    <label for="herpes_text">באילו אזורים מתפרץ ההרפס וכמה זמן?</label>
+                    <textarea id="herpes_text" name="herpes_text"></textarea>
+                </div>
+            </div>
+
+            <!-- סוכרת + שאלת המשך -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת מסוכרת?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="diabetes" value="כן" data-toggle="diabetes_detail" onclick="twoStateToggle('diabetes_detail',true)" onchange="twoStateToggle('diabetes_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="diabetes" value="לא" data-toggle="diabetes_detail" onclick="twoStateToggle('diabetes_detail',false)" onchange="twoStateToggle('diabetes_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="diabetes_detail">
+                    <label>האם הסוכרת מאוזנת ע"י תרופות?</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="diabetes_balanced" value="כן">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="diabetes_balanced" value="לא">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- מחלה אחרת -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת ממחלה אחרת או בעיה בריאותית אחרת?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="other_disease" value="כן" data-toggle="other_disease_detail" onclick="twoStateToggle('other_disease_detail',true)" onchange="twoStateToggle('other_disease_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="other_disease" value="לא" data-toggle="other_disease_detail" onclick="twoStateToggle('other_disease_detail',false)" onchange="twoStateToggle('other_disease_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="other_disease_detail">
+                    <label for="other_disease_text">פרט/י את המחלה / הבעיה הבריאותית (סוג, מתי החלה, טיפול)</label>
+                    <textarea id="other_disease_text" name="other_disease_text"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             טבלת שאלות כן/לא - מצב בריאותי
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">שאלון מצב בריאותי</div>
+            <p class="card-subtitle">סמן/י כן או לא עבור כל שאלה</p>
+
+            <!-- היריון -->
+            <div class="question-row">
+                <span class="q-text">האם הנך בשלבי היריון?</span>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="pregnant" value="כן"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                    <label class="radio-option"><input type="radio" name="pregnant" value="לא"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                </div>
+            </div>
+
+            <!-- הנקה -->
+            <div class="question-row">
+                <span class="q-text">האם את מניקה או לאחר הלידה?</span>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="breastfeeding" value="כן"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                    <label class="radio-option"><input type="radio" name="breastfeeding" value="לא"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                </div>
+            </div>
+
+            <!-- טיפולי פוריות -->
+            <div class="question-row">
+                <span class="q-text">האם את בטיפולי פוריות?</span>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="fertility" value="כן"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                    <label class="radio-option"><input type="radio" name="fertility" value="לא"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                </div>
+            </div>
+
+            <!-- לב / ל"ד -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת ממחלות לב ו/או לחץ דם?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="heart_bp" value="כן" data-toggle="heart_bp_detail" onclick="twoStateToggle('heart_bp_detail',true)" onchange="twoStateToggle('heart_bp_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="heart_bp" value="לא" data-toggle="heart_bp_detail" onclick="twoStateToggle('heart_bp_detail',false)" onchange="twoStateToggle('heart_bp_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="heart_bp_detail">
+                    <label for="heart_bp_text">פרט/י את המצב הרפואי ואת התרופות הנלקחות</label>
+                    <textarea id="heart_bp_text" name="heart_bp_text"></textarea>
+                </div>
+            </div>
+
+            <!-- בלוטת התריס -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת מהפרעות בפעילות בלוטת התריס?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="thyroid" value="כן" data-toggle="thyroid_detail" onclick="twoStateToggle('thyroid_detail',true)" onchange="twoStateToggle('thyroid_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="thyroid" value="לא" data-toggle="thyroid_detail" onclick="twoStateToggle('thyroid_detail',false)" onchange="twoStateToggle('thyroid_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="thyroid_detail">
+                    <label for="thyroid_text">פרט/י (יתר/תת פעילות, ותרופות שאת/ה נוטל/ת)</label>
+                    <textarea id="thyroid_text" name="thyroid_text"></textarea>
+                </div>
+            </div>
+
+            <!-- מחלה ממארת -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת או סבלת ממחלה ממארת (ב-10 שנים האחרונות)?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="cancer" value="כן" data-toggle="cancer_detail" onclick="twoStateToggle('cancer_detail',true)" onchange="twoStateToggle('cancer_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="cancer" value="לא" data-toggle="cancer_detail" onclick="twoStateToggle('cancer_detail',false)" onchange="twoStateToggle('cancer_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="cancer_detail">
+                    <label for="cancer_text">פרט/י את סוג המחלה ושנת ההחלמה / טיפול נוכחי</label>
+                    <textarea id="cancer_text" name="cancer_text"></textarea>
+                </div>
+            </div>
+
+            <!-- G6PD -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך סובל/ת מחסר G6PD?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="g6pd" value="כן" data-toggle="g6pd_detail" onclick="twoStateToggle('g6pd_detail',true)" onchange="twoStateToggle('g6pd_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="g6pd" value="לא" data-toggle="g6pd_detail" onclick="twoStateToggle('g6pd_detail',false)" onchange="twoStateToggle('g6pd_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="g6pd_detail">
+                    <label for="g6pd_text">פרט/י (חומרים שאסור לחשוף אליהם)</label>
+                    <input type="text" id="g6pd_text" name="g6pd_text">
+                </div>
+            </div>
+
+            <!-- הפטיטיס -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם יש לך הפטיטיס (צהבת)?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="hepatitis" value="כן" data-toggle="hepatitis_detail" onclick="twoStateToggle('hepatitis_detail',true)" onchange="twoStateToggle('hepatitis_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="hepatitis" value="לא" data-toggle="hepatitis_detail" onclick="twoStateToggle('hepatitis_detail',false)" onchange="twoStateToggle('hepatitis_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="hepatitis_detail">
+                    <label for="hepatitis_text">פרט/י את סוג ההפטיטיס (A/B/C) ושנת האבחון</label>
+                    <input type="text" id="hepatitis_text" name="hepatitis_text">
+                </div>
+            </div>
+
+            <!-- HIV -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם את/ה נשא של HIV?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="hiv" value="כן" data-toggle="hiv_detail" onclick="twoStateToggle('hiv_detail',true)" onchange="twoStateToggle('hiv_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="hiv" value="לא" data-toggle="hiv_detail" onclick="twoStateToggle('hiv_detail',false)" onchange="twoStateToggle('hiv_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="hiv_detail">
+                    <label for="hiv_text">פרט/י (טיפול תרופתי, מצב נוכחי)</label>
+                    <textarea id="hiv_text" name="hiv_text"></textarea>
+                </div>
+            </div>
+
+            <!-- אנטיביוטיקה - שאלה נוספת שהוסיף הלקוח -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם נטלת אנטיביוטיקה ב-10 הימים האחרונים?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="antibiotics" value="כן" data-toggle="antibiotics_detail" onclick="twoStateToggle('antibiotics_detail',true)" onchange="twoStateToggle('antibiotics_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="antibiotics" value="לא" data-toggle="antibiotics_detail" onclick="twoStateToggle('antibiotics_detail',false)" onchange="twoStateToggle('antibiotics_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="antibiotics_detail">
+                    <label for="antibiotics_text">איזו אנטיביוטיקה ומתי?</label>
+                    <input type="text" id="antibiotics_text" name="antibiotics_text">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             נתונים היסטוריים
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">נתונים היסטוריים</div>
+
+            <div class="form-group full-width">
+                <label>מצב בריאותי כללי:</label>
+                <div class="radio-group">
+                    <label class="radio-option"><input type="radio" name="health_status" value="מצוין"><span class="radio-custom"></span><span class="radio-label">מצוין</span></label>
+                    <label class="radio-option"><input type="radio" name="health_status" value="טוב"><span class="radio-custom"></span><span class="radio-label">טוב</span></label>
+                    <label class="radio-option"><input type="radio" name="health_status" value="בינוני"><span class="radio-custom"></span><span class="radio-label">בינוני</span></label>
+                    <label class="radio-option"><input type="radio" name="health_status" value="לא תקין"><span class="radio-custom"></span><span class="radio-label">לא תקין</span></label>
+                </div>
+            </div>
+
+            <!-- אקנה -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם סבלת מאקנה בעבר?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="acne" value="כן" data-toggle="acne_detail" onclick="twoStateToggle('acne_detail',true)" onchange="twoStateToggle('acne_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="acne" value="לא" data-toggle="acne_detail" onclick="twoStateToggle('acne_detail',false)" onchange="twoStateToggle('acne_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="acne_detail">
+                    <label for="acne_when">מתי חלף האקנה?</label>
+                    <input type="text" id="acne_when" name="acne_when">
+                </div>
+            </div>
+
+            <!-- נוגדי דיכאון -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך נוטל/ת נוגדי דיכאון (ציפרלקס, תיפרמיל, ויפאקס, רסיטל וכד')?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="antidepressants" value="כן" data-toggle="antidepressants_detail" onclick="twoStateToggle('antidepressants_detail',true)" onchange="twoStateToggle('antidepressants_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="antidepressants" value="לא" data-toggle="antidepressants_detail" onclick="twoStateToggle('antidepressants_detail',false)" onchange="twoStateToggle('antidepressants_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="antidepressants_detail">
+                    <label for="antidepressants_text">אילו תרופות נוגדות דיכאון את/ה נוטל/ת?</label>
+                    <textarea id="antidepressants_text" name="antidepressants_text"></textarea>
+                </div>
+            </div>
+
+            <!-- תגובות חריפות לטיפולים בעבר -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם התגלו תגובות חריפות או מיוחדות לטיפולים שעשית בעבר?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="past_reactions" value="כן" data-toggle="past_reactions_detail" onclick="twoStateToggle('past_reactions_detail',true)" onchange="twoStateToggle('past_reactions_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="past_reactions" value="לא" data-toggle="past_reactions_detail" onclick="twoStateToggle('past_reactions_detail',false)" onchange="twoStateToggle('past_reactions_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="past_reactions_detail">
+                    <label for="past_reactions_text">פרט/י את התגובות החריפות וסוג הטיפול בו הופיעו</label>
+                    <textarea id="past_reactions_text" name="past_reactions_text"></textarea>
+                </div>
+            </div>
+
+            <!-- רואקוטן -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם טופלת בעבר בתרופה רואקוטן?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="roaccutane" value="כן" data-toggle="roaccutane_detail" onclick="twoStateToggle('roaccutane_detail',true)" onchange="twoStateToggle('roaccutane_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="roaccutane" value="לא" data-toggle="roaccutane_detail" onclick="twoStateToggle('roaccutane_detail',false)" onchange="twoStateToggle('roaccutane_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="roaccutane_detail">
+                    <label for="roaccutane_when">מתי הסתיים הטיפול?</label>
+                    <input type="text" id="roaccutane_when" name="roaccutane_when">
+                </div>
+            </div>
+
+            <!-- מחלות עור -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם היו לך מחלות עור בעבר?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="skin_diseases" value="כן" data-toggle="skin_diseases_detail" onclick="twoStateToggle('skin_diseases_detail',true)" onchange="twoStateToggle('skin_diseases_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="skin_diseases" value="לא" data-toggle="skin_diseases_detail" onclick="twoStateToggle('skin_diseases_detail',false)" onchange="twoStateToggle('skin_diseases_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="skin_diseases_detail">
+                    <label for="skin_diseases_text">פרט/י אילו מחלות עור היו לך (פסוריאזיס, אקזמה וכד') ומתי</label>
+                    <textarea id="skin_diseases_text" name="skin_diseases_text"></textarea>
+                </div>
+            </div>
+
+            <!-- תרופות קבועות -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך משתמש/ת בתרופות באופן קבוע?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="regular_medication" value="כן" data-toggle="regular_medication_detail" onclick="twoStateToggle('regular_medication_detail',true)" onchange="twoStateToggle('regular_medication_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="regular_medication" value="לא" data-toggle="regular_medication_detail" onclick="twoStateToggle('regular_medication_detail',false)" onchange="twoStateToggle('regular_medication_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="regular_medication_detail">
+                    <label for="regular_medication_text">באילו תרופות את/ה משתמש/ת באופן קבוע? (שם, מינון, ממתי)</label>
+                    <textarea id="regular_medication_text" name="regular_medication_text"></textarea>
+                </div>
+            </div>
+
+            <!-- גלולות / התקן הורמונלי -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם את משתמשת בגלולות למניעת הריון/התקן המפריש הורמונים?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="contraceptives" value="כן" data-toggle="contraceptives_detail" onclick="twoStateToggle('contraceptives_detail',true)" onchange="twoStateToggle('contraceptives_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="contraceptives" value="לא" data-toggle="contraceptives_detail" onclick="twoStateToggle('contraceptives_detail',false)" onchange="twoStateToggle('contraceptives_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="contraceptives_detail">
+                    <label for="contraceptives_text">פרט/י באיזה התקן/גלולה את משתמשת</label>
+                    <textarea id="contraceptives_text" name="contraceptives_text"></textarea>
+                </div>
+            </div>
+
+            <!-- תכשירים במרשם רופא -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך משתמש/ת בתכשירים למריחה על העור במרשם רופא?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="prescription_topical" value="כן" data-toggle="prescription_topical_detail" onclick="twoStateToggle('prescription_topical_detail',true)" onchange="twoStateToggle('prescription_topical_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="prescription_topical" value="לא" data-toggle="prescription_topical_detail" onclick="twoStateToggle('prescription_topical_detail',false)" onchange="twoStateToggle('prescription_topical_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="prescription_topical_detail">
+                    <label for="prescription_topical_text">באילו תכשירים במרשם רופא את/ה משתמש/ת? (שם תכשיר, ריכוז)</label>
+                    <textarea id="prescription_topical_text" name="prescription_topical_text"></textarea>
+                </div>
+            </div>
+
+            <!-- תכשירים מקלפים -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך משתמש/ת בתכשירים מקלפים פעילים?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="peeling_products" value="כן" data-toggle="peeling_products_detail" onclick="twoStateToggle('peeling_products_detail',true)" onchange="twoStateToggle('peeling_products_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="peeling_products" value="לא" data-toggle="peeling_products_detail" onclick="twoStateToggle('peeling_products_detail',false)" onchange="twoStateToggle('peeling_products_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="peeling_products_detail">
+                    <label for="peeling_products_text">באילו תכשירים? (שם המוצר, ריכוז, תדירות)</label>
+                    <textarea id="peeling_products_text" name="peeling_products_text"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="daily_products">באילו תכשירי טיפוח הנך משתמש/ת על בסיס יומיומי?</label>
+                <textarea id="daily_products" name="daily_products"></textarea>
+            </div>
+
+            <!-- עישון -->
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך מעשן/ת?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="smoking" value="כן" data-toggle="smoking_detail" onclick="twoStateToggle('smoking_detail',true)" onchange="twoStateToggle('smoking_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="smoking" value="לא" data-toggle="smoking_detail" onclick="twoStateToggle('smoking_detail',false)" onchange="twoStateToggle('smoking_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="smoking_detail">
+                    <label for="smoking_text">נא לפרט כמה שנים וכמה סיגריות ביום</label>
+                    <input type="text" id="smoking_text" name="smoking_text">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="sun_exposure">רמת חשיפה לשמש (עקב העיסוק / הרגלים / תחביבים):</label>
+                <textarea id="sun_exposure" name="sun_exposure"></textarea>
+            </div>
+        </div>
+
+        <!-- ============================================
+             רגישויות ואלרגיות
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">רגישויות ואלרגיות</div>
+
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם ידועה לך רגישות או אלרגיה למשחות, תרופות או תכשירים קוסמטיים?</span>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="allergies" value="כן" data-toggle="allergies_detail" onclick="twoStateToggle('allergies_detail',true)" onchange="twoStateToggle('allergies_detail',true)">
+                            <span class="radio-custom"></span><span class="radio-label">כן</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="allergies" value="לא" data-toggle="allergies_detail" onclick="twoStateToggle('allergies_detail',false)" onchange="twoStateToggle('allergies_detail',false)">
+                            <span class="radio-custom"></span><span class="radio-label">לא</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="conditional" id="allergies_detail">
+                    <label for="allergies_text">פרט/י לאילו חומרים, תרופות או תכשירים את/ה אלרגי/ת</label>
+                    <textarea id="allergies_text" name="allergies_text"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך רגיש/ה למשחות אלחוש?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="anesthetic_allergy" value="כן" data-toggle="anesthetic_allergy_detail" onclick="twoStateToggle('anesthetic_allergy_detail',true)" onchange="twoStateToggle('anesthetic_allergy_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="anesthetic_allergy" value="לא" data-toggle="anesthetic_allergy_detail" onclick="twoStateToggle('anesthetic_allergy_detail',false)" onchange="twoStateToggle('anesthetic_allergy_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="anesthetic_allergy_detail">
+                    <label for="anesthetic_allergy_text">פרט/י לאיזו משחת אלחוש ואת סוג התגובה</label>
+                    <input type="text" id="anesthetic_allergy_text" name="anesthetic_allergy_text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="question-row">
+                    <span class="q-text">האם הנך רגיש/ה למתכות?</span>
+                    <div class="radio-group">
+                        <label class="radio-option"><input type="radio" name="metal_allergy" value="כן" data-toggle="metal_allergy_detail" onclick="twoStateToggle('metal_allergy_detail',true)" onchange="twoStateToggle('metal_allergy_detail',true)"><span class="radio-custom"></span><span class="radio-label">כן</span></label>
+                        <label class="radio-option"><input type="radio" name="metal_allergy" value="לא" data-toggle="metal_allergy_detail" onclick="twoStateToggle('metal_allergy_detail',false)" onchange="twoStateToggle('metal_allergy_detail',false)"><span class="radio-custom"></span><span class="radio-label">לא</span></label>
+                    </div>
+                </div>
+                <div class="conditional" id="metal_allergy_detail">
+                    <label for="metal_allergy_text">פרט/י לאילו מתכות (ניקל, זהב וכד\')</label>
+                    <input type="text" id="metal_allergy_text" name="metal_allergy_text">
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="other_allergies">רגישויות נוספות:</label>
+                <textarea id="other_allergies" name="other_allergies"></textarea>
+            </div>
+        </div>
+
+        <!-- ============================================
+             הנחיות לאחר טיפול
+             ============================================ -->
+        <div class="card guidelines">
+            <div class="card-title">הנחיות חשובות לאחר הטיפול</div>
+            <p class="guidelines-intro">מטופל/ת יקר/ה, לידיעתך:</p>
+            <ul>
+                <li>אין לשפשף / לגרד את האזור המטופל במשך 24 שעות</li>
+                <li>אין לשהות במים חמים / ג'קוזי / סאונה במשך 24 שעות</li>
+                <li>יש להימנע מאימוני כושר נמרצים במשך 24 שעות</li>
+                <li>יש להימנע מחשיפה לשמש / מיטות שיזוף ולהשתמש במקדם הגנה</li>
+                <li>יש לדווח לקוסמטיקאית על כל תופעת לוואי</li>
+                <li>הקוסמטיקאית תצלם את פניך לצורך תיעוד בלבד (ללא שימוש ללא רשות)</li>
+            </ul>
+        </div>
+
+        <!-- ============================================
+             הצהרת מטופל
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">הצהרת המטופל/ת</div>
+            <div class="declaration-text">
+                <p>הנני מצהיר/ה כי כל הנתונים שמילאתי בשאלון זה הינם נכונים למיטב ידיעתי. לא ידועה לי כל מחלה נוספת או בעיה בריאותית נוספת על אלה שהוזכרו לעיל. אינני לוקח/ת תרופות נוספות על אלה שהוזכרו לעיל. ידוע לי, כי הטיפול הקוסמטי יותאם לי על סמך הנתונים אותם מסרתי בשאלון זה.</p>
+                <p>אני מתחייב/ת לדווח לקוסמטיקאית על כל שינוי ב: מצב בריאותי; תרופות או תכשירים חדשים שאקח; טיפולים רפואיים שאקבל.</p>
+                <p>כל בעיה, תקלה או אי הצלחה של הטיפול שמקורם במידע בריאותי/תרופתי שלא מסרתי הנם על אחריותי בלבד ולא תהיה לי טענה או תביעה כלפי המטפלת.</p>
+                <p>הנני מתחייב/ת לקיים את הוראות הקוסמטיקאית הנוגעות לזהירות מחשיפה לשמש, שימוש בחומרים פעילים או כל הוראה והנחייה הקשורים לטיפול המקצועי בעור.</p>
+            </div>
+            <div class="form-group" style="margin-top: 22px;">
+                <label class="radio-option" style="font-size:15px;">
+                    <input type="checkbox" id="declarationAgree" name="declarationAgree" required style="margin-left:10px; width:18px; height:18px; cursor:pointer;">
+                    <span style="font-weight: 600;">אני מאשר/ת כי קראתי את ההצהרה ומסכים/ה לתוכנה <span class="required">*</span></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- ============================================
+             חתימה דיגיטלית
+             ============================================ -->
+        <div class="card">
+            <div class="card-title">חתימה דיגיטלית</div>
+            <p class="card-subtitle">אנא חתום/חתמי בתוך האזור המתאים באמצעות עכבר או אצבע</p>
+
+            <!-- הודעה דינמית לפי גיל - מתעדכנת אוטומטית -->
+            <div id="ageNotice" class="age-notice" role="status" aria-live="polite">רק חתימת המטופל/ת נדרשת</div>
+
+            <!-- חתימת מטופל/ת - תמיד מוצגת -->
+            <div id="adultSignatureBlock">
+                <div class="form-group">
+                    <label>חתימת הלקוח/ה <span class="required">*</span></label>
+                    <div class="signature-section">
+                        <div class="signature-box" data-sig-target="adultSignature">
+                            <span class="signature-signed-badge">חתום/ה ✓</span>
+                            <canvas class="signature-canvas" id="adultSignature" data-name="adult"></canvas>
+                            <span class="signature-tap-hint"><span class="tap-icon">✍</span>לחץ/י כאן כדי לחתום</span>
+                        </div>
+                        <div class="signature-controls">
+                            <button type="button" class="clear-btn" data-clear="adultSignature">נקה חתימה</button>
+                            <span class="signature-hint">חתימה תישמר כתמונה</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+                 חלק קטין - מוצג רק כשגיל < 18
+                 ============================================ -->
+            <div id="minorSection" class="minor-section">
+                <h3>פרטי הורה / אפוטרופוס (חובה רק במקרה של מטופל/ת מתחת לגיל 18)</h3>
+
+                <!-- פרטי הורה -->
+                <h4 style="font-weight:600; margin-bottom: 12px; color: var(--primary);">פרטי ההורה / האפוטרופוס:</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="parentName">שם ההורה <span class="required">*</span></label>
+                        <input type="text" id="parentName" name="parentName">
+                    </div>
+                    <div class="form-group">
+                        <label for="parentRelation">קרבה <span class="required">*</span></label>
+                        <input type="text" id="parentRelation" name="parentRelation" placeholder="לדוגמא: אב / אם">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="parentId">ת"ז ההורה <span class="required">*</span></label>
+                        <input type="text" id="parentId" name="parentId" maxlength="9">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>חתימת ההורה <span class="required">*</span></label>
+                    <div class="signature-section">
+                        <div class="signature-box" data-sig-target="parentSignature">
+                            <span class="signature-signed-badge">חתום/ה ✓</span>
+                            <canvas class="signature-canvas" id="parentSignature" data-name="parent"></canvas>
+                            <span class="signature-tap-hint"><span class="tap-icon">✍</span>לחץ/י כאן לחתימת ההורה</span>
+                        </div>
+                        <div class="signature-controls">
+                            <button type="button" class="clear-btn" data-clear="parentSignature">נקה חתימה</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- פרטי הקטין -->
+                <h4 style="font-weight:600; margin: 24px 0 12px; color: var(--primary);">פרטי הקטין/ה:</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="minorName">שם הקטין/ה <span class="required">*</span></label>
+                        <input type="text" id="minorName" name="minorName">
+                    </div>
+                    <div class="form-group">
+                        <label for="minorId">ת"ז הקטין/ה <span class="required">*</span></label>
+                        <input type="text" id="minorId" name="minorId" maxlength="9">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>חתימת הקטין/ה <span class="required">*</span></label>
+                    <div class="signature-section">
+                        <div class="signature-box" data-sig-target="minorSignature">
+                            <span class="signature-signed-badge">חתום/ה ✓</span>
+                            <canvas class="signature-canvas" id="minorSignature" data-name="minor"></canvas>
+                            <span class="signature-tap-hint"><span class="tap-icon">✍</span>לחץ/י כאן לחתימת הקטין/ה</span>
+                        </div>
+                        <div class="signature-controls">
+                            <button type="button" class="clear-btn" data-clear="minorSignature">נקה חתימה</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             שלב 6: כפתור שליחה
+             ============================================ -->
+        <div class="submit-section">
+            <button type="button" class="submit-btn" id="submitBtn" onclick="sendForm(); return false;">שלח טופס</button>
+        </div>
+
+    </form>
+</div>
+
+<!-- ============================================
+     מודאל הצלחה - אנימציה SVG מקצועית
+     ============================================ -->
+<div class="success-modal" id="successModal">
+    <div class="success-modal-content">
+        <div class="success-svg-wrap" aria-hidden="true">
+            <svg class="success-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <circle class="success-circle" cx="40" cy="40" r="36" fill="none" stroke="#2d8a4e" stroke-width="4"/>
+                <path class="success-check" fill="none" stroke="#2d8a4e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" d="M23 41 L35 53 L58 28"/>
+            </svg>
+        </div>
+        <h2>נשלח בהצלחה</h2>
+        <p>תודה רבה - צוות הקליניקה יחזור אליך בהקדם</p>
+        <button type="button" onclick="closeSuccessModal()">סגור</button>
+    </div>
+</div>
+
+<!-- ============================================
+     JavaScript - לוגיקה מלאה
+     ============================================ -->
+<script>
+/* ====================================================
+   הצהרת בריאות לטיפול קוסמטי - JavaScript
+   ====================================================
+   מבנה הקוד:
+   1. אובייקטים גלובליים לחתימות
+   2. אתחול חתימות (Canvas)
+   3. שדות מותנים (Show/Hide)
+   4. לוגיקת גיל (קטין/בגיר)
+   5. ולידציה
+   6. איסוף נתונים ושליחה
+   7. EmailJS placeholder
+   ==================================================== */
+
+// אובייקט המאחסן את כל מופעי החתימה
+const signaturePads = {};
+
+/* ====================================================
+   1. SignaturePad - Pointer Events primary + ResizeObserver
+   ====================================================
+   • Pointer Events (סטנדרט מאוחד) כראשי - עם capture
+   • Touch + Mouse כ-fallback לדפדפנים ישנים מאוד
+   • ResizeObserver - re-init אוטומטי כשהקנבס מקבל גודל חדש
+     (פותר את הבעיה הקריטית של hidden→visible במובייל)
+   • DPR scaling מדויק
+   ==================================================== */
+function SignaturePad(canvas) {
+    var self = this;
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.placeholder = canvas.parentElement.querySelector('.signature-placeholder');
+    this.isDrawing = false;
+    this.isEmpty = true;
+    this.lastX = 0;
+    this.lastY = 0;
+    this.activePointerId = null;
+    this._lastSize = { w: 0, h: 0 };
+
+    this.setupCanvas = function() {
+        var rect = canvas.getBoundingClientRect();
+        var dpr = window.devicePixelRatio || 1;
+        if (rect.width <= 0 || rect.height <= 0) return;
+
+        // שמור ציור קיים לשחזור
+        var hadContent = !self.isEmpty;
+        var prevData = hadContent ? canvas.toDataURL() : null;
+
+        canvas.width  = Math.max(1, Math.floor((canvas.clientWidth  || rect.width)  * dpr));
+        canvas.height = Math.max(1, Math.floor((canvas.clientHeight || rect.height) * dpr));
+        self.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        self.ctx.scale(dpr, dpr);
+        self.ctx.lineWidth = 2.2;
+        self.ctx.lineCap = 'round';
+        self.ctx.lineJoin = 'round';
+        self.ctx.strokeStyle = '#1a1a1a';
+        self.ctx.fillStyle = '#1a1a1a';
+
+        // שחזר ציור קודם אם היה
+        if (prevData) {
+            var img = new Image();
+            img.onload = function() {
+                var r = canvas.getBoundingClientRect();
+                self.ctx.drawImage(img, 0, 0, r.width, r.height);
+            };
+            img.src = prevData;
+        }
+
+        self._lastSize = { w: canvas.width, h: canvas.height };
+    };
+
+    function getPos(clientX, clientY) {
+        var rect = canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    function startStroke(clientX, clientY) {
+        // Re-fit מגן: אם הממדים שונים מהצפוי - יישר תחילה
+        var rect = canvas.getBoundingClientRect();
+        var dpr = window.devicePixelRatio || 1;
+        var expectedW = Math.floor((canvas.clientWidth || rect.width) * dpr);
+        if (canvas.width !== expectedW || canvas.width === 0) {
+            self.setupCanvas();
+        }
+        var p = getPos(clientX, clientY);
+        self.isDrawing = true;
+        self.lastX = p.x;
+        self.lastY = p.y;
+        self.ctx.beginPath();
+        self.ctx.arc(p.x, p.y, self.ctx.lineWidth / 2, 0, Math.PI * 2);
+        self.ctx.fill();
+        if (self.isEmpty) {
+            if (self.placeholder) self.placeholder.classList.add('hidden');
+            self.isEmpty = false;
+        }
+    }
+
+    function extendStroke(clientX, clientY) {
+        if (!self.isDrawing) return;
+        var p = getPos(clientX, clientY);
+        self.ctx.beginPath();
+        self.ctx.moveTo(self.lastX, self.lastY);
+        self.ctx.lineTo(p.x, p.y);
+        self.ctx.stroke();
+        self.lastX = p.x;
+        self.lastY = p.y;
+    }
+
+    function endStroke() {
+        self.isDrawing = false;
+        self.activePointerId = null;
+    }
+
+    // === Pointer Events handlers ===
+    function onPointerDown(e) {
+        e.preventDefault();
+        if (typeof canvas.setPointerCapture === 'function') {
+            try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        self.activePointerId = e.pointerId;
+        startStroke(e.clientX, e.clientY);
+    }
+    function onPointerMove(e) {
+        if (!self.isDrawing || e.pointerId !== self.activePointerId) return;
+        e.preventDefault();
+        var events = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e];
+        for (var i = 0; i < events.length; i++) {
+            extendStroke(events[i].clientX, events[i].clientY);
+        }
+    }
+    function onPointerUp(e) {
+        if (e.pointerId !== self.activePointerId) return;
+        if (typeof canvas.releasePointerCapture === 'function' &&
+            canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
+            try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+        endStroke();
+    }
+
+    // === Touch fallback ===
+    function onTouchStart(e) {
+        e.preventDefault();
+        var t = e.changedTouches[0];
+        startStroke(t.clientX, t.clientY);
+    }
+    function onTouchMove(e) {
+        if (!self.isDrawing) return;
+        e.preventDefault();
+        var t = e.changedTouches[0];
+        extendStroke(t.clientX, t.clientY);
+    }
+    function onTouchEnd(e) { if (e.cancelable) e.preventDefault(); endStroke(); }
+
+    // === Mouse fallback ===
+    function onMouseDown(e) { e.preventDefault(); startStroke(e.clientX, e.clientY); }
+    function onMouseMove(e) { if (self.isDrawing) extendStroke(e.clientX, e.clientY); }
+    function onMouseUp()    { endStroke(); }
+
+    this.clear = function() {
+        self.ctx.save();
+        self.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        self.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        self.ctx.restore();
+        self.isEmpty = true;
+        self.isDrawing = false;
+        self.activePointerId = null;
+        if (self.placeholder) self.placeholder.classList.remove('hidden');
+    };
+    this.toDataURL = function() { return self.isEmpty ? null : canvas.toDataURL('image/png'); };
+    this.isSigned = function() { return !self.isEmpty; };
+
+    // === אתחול והצמדת אירועים ===
+    this.setupCanvas();
+
+    if (window.PointerEvent) {
+        // Pointer events כראשי - לא נצרף touch/mouse כדי למנוע double-fire
+        canvas.addEventListener('pointerdown',   onPointerDown);
+        canvas.addEventListener('pointermove',   onPointerMove);
+        canvas.addEventListener('pointerup',     onPointerUp);
+        canvas.addEventListener('pointercancel', onPointerUp);
+        canvas.addEventListener('pointerleave',  onPointerUp);
+    } else {
+        // דפדפן ישן: touch + mouse כ-fallback
+        canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+        canvas.addEventListener('touchmove',  onTouchMove,  { passive: false });
+        canvas.addEventListener('touchend',   onTouchEnd,   { passive: false });
+        canvas.addEventListener('touchcancel',onTouchEnd,   { passive: false });
+        canvas.addEventListener('mousedown',  onMouseDown);
+        canvas.addEventListener('mousemove',  onMouseMove);
+        window.addEventListener('mouseup',    onMouseUp);
+    }
+
+    // === ResizeObserver - מטפל ב-hidden→visible וב-orientation change ===
+    if (window.ResizeObserver) {
+        try {
+            var ro = new ResizeObserver(function(entries) {
+                for (var i = 0; i < entries.length; i++) {
+                    var box = entries[i].contentRect;
+                    var dpr = window.devicePixelRatio || 1;
+                    var expectedW = Math.floor(box.width * dpr);
+                    // רק כשהגודל באמת השתנה
+                    if (box.width > 0 && canvas.width !== expectedW) {
+                        self.setupCanvas();
+                    }
+                }
+            });
+            ro.observe(canvas);
+            self._resizeObserver = ro;
+        } catch (_) {}
+    }
+}
+
+function initSignatures() {
+    document.querySelectorAll('.signature-canvas').forEach(canvas => {
+        signaturePads[canvas.id] = new SignaturePad(canvas);
+    });
+}
+
+/* ====================================================
+   טיפול בשינוי גודל - שומר על הציור הקיים
+   • debounce 150ms כדי לא לעבד כל אירוע resize
+   • שומר תמונה → משנה ממדים → מצייר חזרה
+   ==================================================== */
+let _resizeTimer = null;
+window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+        Object.values(signaturePads).forEach(pad => {
+            // אם הקנבס מוסתר (display:none) נדלג עליו - יאותחל מחדש
+            // כשיוצג שוב דרך toggleMinorSection
+            const rect = pad.canvas.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+
+            const wasEmpty = pad.isEmpty;
+            const dataURL = wasEmpty ? null : pad.canvas.toDataURL();
+            pad.setupCanvas();
+            if (dataURL) {
+                const img = new Image();
+                img.onload = () => {
+                    const newRect = pad.canvas.getBoundingClientRect();
+                    pad.ctx.drawImage(img, 0, 0, newRect.width, newRect.height);
+                };
+                img.src = dataURL;
+                pad.isEmpty = false;
+                pad.placeholder.classList.add('hidden');
+            }
+        });
+    }, 150);
+});
+
+/* ====================================================
+   ניקוי חתימות (כפתור "נקה חתימה")
+   ==================================================== */
+document.addEventListener('click', e => {
+    if (e.target.matches('[data-clear]')) {
+        const id = e.target.dataset.clear;
+        if (signaturePads[id]) signaturePads[id].clear();
+    }
+});
+
+function clearAllSignatures() {
+    Object.values(signaturePads).forEach(p => p.clear());
+}
+
+/* ====================================================
+   2. שדות מותנים - הצגת שדה פירוט כאשר נבחר "כן"
+   ==================================================== */
+/* לוגיקה אחת - נקראת גם מ-change וגם מ-click
+   idempotent: ריצה כפולה נותנת תוצאה זהה */
+function applyToggleForGroup(radio) {
+    if (!radio || !radio.dataset.toggle) return;
+    const target = document.getElementById(radio.dataset.toggle);
+    if (!target) return;
+
+    // איתור הרדיו שנבחר כרגע בקבוצה (לפי name)
+    const checked = document.querySelector(
+        'input[type="radio"][name="' + radio.name + '"]:checked'
+    );
+
+    if (checked && checked.value === 'כן') {
+        target.classList.add('active');
+    } else {
+        target.classList.remove('active');
+        target.querySelectorAll('input, textarea').forEach(el => {
+            if (el.type !== 'radio') el.value = '';
+            else el.checked = false;
+        });
+    }
+}
+
+// מאזין ראשי - change event (סטנדרט)
+document.querySelectorAll('input[type="radio"][data-toggle]').forEach(radio => {
+    radio.addEventListener('change', function() { applyToggleForGroup(this); });
+});
+
+// Fallback למובייל - delegation על click
+// (חלק מ-WebView/iOS Safari לא יורים change בעקביות
+//  כשה-input מקבל את הקליק דרך label שעוטף אותו)
+document.addEventListener('click', function(e) {
+    const label = e.target.closest('.radio-option');
+    if (!label) return;
+    const radio = label.querySelector('input[type="radio"][data-toggle]');
+    if (!radio) return;
+    requestAnimationFrame(() => applyToggleForGroup(radio));
+});
+
+// טריפל-fallback: listener ישיר על כל label של רדיו עם data-toggle
+// (iOS לפעמים לא מבעבע click לרמת document - הישיר תמיד עובד)
+document.querySelectorAll('.radio-option').forEach(label => {
+    const radio = label.querySelector('input[type="radio"][data-toggle]');
+    if (!radio) return;
+    label.addEventListener('click', function() {
+        // נחכה 2 פריימים לבטחון - iOS Safari לפעמים מאחר
+        requestAnimationFrame(() => requestAnimationFrame(() => applyToggleForGroup(radio)));
+    });
+});
+
+/* ====================================================
+   3. לוגיקת גיל - הצגת חלק קטין כאשר גיל < 18
+   ====================================================
+   • גיל < 18: מסתיר את חתימת הבגיר, מציג את אזור הקטין
+     (פרטי הורה + פרטי קטין + 2 חתימות) ומאתחל מחדש
+     את ה-canvas של ההורה/קטין (חשוב כי כשהאזור היה
+     מוסתר ה-bounding rect היה 0x0).
+   • גיל >= 18: רק חתימת הבגיר.
+   ==================================================== */
+const ageInput          = document.getElementById('age');
+const minorSection      = document.getElementById('minorSection');
+const adultSignBlock    = document.getElementById('adultSignatureBlock');
+
+ageInput.addEventListener('input',  updateAgeNotice);
+ageInput.addEventListener('change', updateAgeNotice);
+ageInput.addEventListener('blur',   updateAgeNotice);
+ageInput.addEventListener('keyup',  updateAgeNotice);
+// קריאה ראשונית - מעדכן את ההודעה גם אם יש ערך autofill
+updateAgeNotice();
+
+// === הודעה דינמית לפי גיל - אין יותר show/hide של DOM ===
+// כל החלקים גלויים תמיד, רק הטקסט והוולידציה משתנים
+function updateAgeNotice() {
+    var ageValue = parseInt(ageInput.value || "0", 10);
+    var isMinor = !isNaN(ageValue) && ageValue > 0 && ageValue < 18;
+    var notice = document.getElementById('ageNotice');
+    if (!notice) return;
+    if (isMinor) {
+        notice.textContent = 'לתשומת לבך: במקרה של מטופל/ת מתחת לגיל 18 נדרשת חתימת הורה בנוסף לחתימת המטופל/ת';
+        notice.classList.add('minor');
+    } else {
+        notice.textContent = 'רק חתימת המטופל/ת נדרשת';
+        notice.classList.remove('minor');
+    }
+}
+
+// תאימות לאחור עם קוד קיים שאולי קורא toggleMinorSection / renderAgeSections
+function toggleMinorSection() { updateAgeNotice(); }
+window.renderAgeSections = updateAgeNotice;
+
+/* ====================================================
+   4. ולידציה של הטופס
+   ==================================================== */
+function validateForm() {
+    const errors = [];
+    const form = document.getElementById('healthForm');
+
+    // ניקוי כל שדות ה-error
+    if (typeof clearFieldErrors === 'function') clearFieldErrors();
+    form.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+
+    // שדות חובה בסיסיים
+    const requiredFields = [
+        { id: 'fullName', label: 'שם מלא' },
+        { id: 'phone', label: 'טלפון נייד' },
+        { id: 'email', label: 'אימייל' },
+        { id: 'age', label: 'גיל' }
+    ];
+
+    requiredFields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el.value.trim()) {
+            errors.push(`חסר: ${f.label}`);
+            el.classList.add('error');
+        }
+    });
+
+    // ולידציה של אימייל
+    const email = document.getElementById('email');
+    if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        errors.push('כתובת אימייל אינה תקינה');
+        email.classList.add('error');
+    }
+
+    // ולידציה של טלפון
+    const phone = document.getElementById('phone');
+    if (phone.value && !/^[\d\-+\s()]{7,}$/.test(phone.value)) {
+        errors.push('מספר טלפון אינו תקין');
+        phone.classList.add('error');
+    }
+
+    // אישור הצהרה
+    const decAgree = document.getElementById('declarationAgree');
+    if (!decAgree.checked) {
+        errors.push('יש לאשר את הצהרת המטופל');
+        decAgree.parentElement.style.color = 'var(--error)';
+    } else {
+        decAgree.parentElement.style.color = '';
+    }
+
+    // === ולידציית חתימה ===
+    // חתימת מטופל/ת - תמיד חובה
+    if (!signaturePads.adultSignature || !signaturePads.adultSignature.isSigned()) {
+        errors.push('חסרה חתימת המטופל/ת');
+    }
+
+    // אם קטין - גם חתימת הורה + פרטי הורה/קטין חובה
+    const ageNum = parseInt(ageInput.value || "0", 10);
+    if (!isNaN(ageNum) && ageNum > 0 && ageNum < 18) {
+        const minorFields = [
+            { id: 'parentName', label: 'שם ההורה' },
+            { id: 'parentRelation', label: 'קרבה' },
+            { id: 'parentId', label: 'ת"ז ההורה' },
+            { id: 'minorName', label: 'שם הקטין/ה' },
+            { id: 'minorId', label: 'ת"ז הקטין/ה' }
+        ];
+        minorFields.forEach(function(f) {
+            const el = document.getElementById(f.id);
+            if (el && !el.value.trim()) {
+                errors.push('חסר: ' + f.label);
+                el.classList.add('error');
+            }
+        });
+        // ת"ז - 9 ספרות
+        const parentIdEl = document.getElementById('parentId');
+        if (parentIdEl && parentIdEl.value && !/^\d{9}$/.test(parentIdEl.value)) {
+            errors.push('ת"ז ההורה חייב להכיל 9 ספרות');
+            parentIdEl.classList.add('error');
+        }
+        const minorIdEl = document.getElementById('minorId');
+        if (minorIdEl && minorIdEl.value && !/^\d{9}$/.test(minorIdEl.value)) {
+            errors.push('ת"ז הקטין/ה חייב להכיל 9 ספרות');
+            minorIdEl.classList.add('error');
+        }
+        // חתימת הורה חובה
+        if (!signaturePads.parentSignature || !signaturePads.parentSignature.isSigned()) {
+            errors.push('חסרה חתימת ההורה');
+        }
+    }
+    // age >= 18: חתימת הורה אופציונלית, לא מוולדת
+
+
+    // === גלילה אוטומטית לשדה הראשון השגוי ===
+    if (errors.length > 0) {
+        const firstErr = form.querySelector('.error');
+        if (firstErr && firstErr.scrollIntoView) {
+            firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            try { firstErr.focus({ preventScroll: true }); } catch(_) {}
+        }
+    }
+    return errors;
+}
+
+/* ====================================================
+   5. איסוף כל נתוני הטופס לאובייקט מסודר
+   ==================================================== */
+function collectFormData() {
+    const form = document.getElementById('healthForm');
+    const formData = new FormData(form);
+    const data = {};
+
+    // איסוף כל השדות
+    for (let [key, value] of formData.entries()) {
+        data[key] = value;
+    }
+
+    // הוספת חתימות כ-Base64
+    // חתימת מטופל/ת - תמיד נשלחת
+    if (signaturePads.adultSignature) {
+        data.adultSignature = signaturePads.adultSignature.toDataURL() || '';
+    }
+    const ageRaw = parseInt(document.getElementById('age').value || "0", 10);
+    if (!isNaN(ageRaw) && ageRaw > 0 && ageRaw < 18) {
+        data.signatureType = 'קטין';
+        if (signaturePads.parentSignature) data.parentSignature = signaturePads.parentSignature.toDataURL() || '';
+        if (signaturePads.minorSignature)  data.minorSignature  = signaturePads.minorSignature.toDataURL()  || '';
+    } else {
+        data.signatureType = 'בגיר';
+        // חתימת הורה אופציונלית - שולחים רק אם נחתם בפועל
+        if (signaturePads.parentSignature && signaturePads.parentSignature.isSigned()) {
+            data.parentSignature = signaturePads.parentSignature.toDataURL();
+        }
+    }
+
+    // מטא-דאטה
+    data.submittedAt = new Date().toISOString();
+    data.submittedAtFormatted = new Date().toLocaleString('he-IL');
+
+    return data;
+}
+
+/* ====================================================
+   6. שליחה - EmailJS Placeholder
+   ====================================================
+   להפעלת שליחה אמיתית:
+   1. פתח חשבון ב-EmailJS (https://www.emailjs.com/)
+   2. הוסף את הסקריפט שלהם ב-<head>:
+      <script src="https://cdn.emailjs.com/dist/email.min.js"><\/script>
+   3. אתחל בקובץ שלך:
+      emailjs.init('YOUR_PUBLIC_KEY');
+   4. עדכן את הפונקציה למטה
+   ==================================================== */
+async function sendViaEmailJS(data) {
+    // ----- קוד מוכן להפעלה כשתוסיף EmailJS -----
+    /*
+    const SERVICE_ID  = 'your_service_id';
+    const TEMPLATE_ID = 'your_template_id';
+
+    try {
+        const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+            full_name: data.fullName,
+            phone: data.phone,
+            email: data.email,
+            // ... כל שאר השדות
+            adult_signature: data.adultSignature || '',
+            parent_signature: data.parentSignature || '',
+            minor_signature: data.minorSignature || '',
+            submitted_at: data.submittedAtFormatted,
+            form_payload: JSON.stringify(data)
+        });
+        return { success: true, response };
+    } catch (error) {
+        console.error('שגיאה בשליחת המייל:', error);
+        return { success: false, error };
+    }
+    */
+
+    // ----- כרגע: סימולציה של שליחה (להחלפה בייצור) -----
+    return new Promise(resolve => {
+        // לבדיקה בקונסול
+        console.log('נתוני הטופס:', data);
+        setTimeout(() => resolve({ success: true }), 800);
+    });
+}
+
+/* ====================================================
+   7. אירוע שליחת הטופס
+   ==================================================== */
+document.getElementById('healthForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    // נתב את ה-submit (כמו לחיצת Enter) דרך sendForm() כדי לאחד את הזרימה
+    if (typeof window.sendForm === 'function') {
+        window.sendForm();
+        return false;
+    }
+
+    const errorAlert = document.getElementById('errorAlert');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // ולידציה
+    const errors = validateForm();
+    if (errors.length > 0) {
+        errorAlert.innerHTML = '<strong>נא לתקן את השגיאות הבאות:</strong><br>• ' + errors.join('<br>• ');
+        errorAlert.classList.add('active');
+        errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    // הסתרת הודעת שגיאה
+    errorAlert.classList.remove('active');
+
+    // איסוף הנתונים
+    const data = collectFormData();
+
+    // מצב טעינה
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'שולח...';
+
+    // שליחה
+    const result = await sendViaEmailJS(data);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'שלח טופס';
+
+    if (result.success) {
+        // הצגת הודעת הצלחה
+        document.getElementById('successModal').classList.add('active');
+    } else {
+        errorAlert.innerHTML = '<strong>אירעה שגיאה בשליחת הטופס. אנא נסה/י שוב.</strong>';
+        errorAlert.classList.add('active');
+    }
+});
+
+/* ====================================================
+   אתחול ראשוני בעת טעינת הדף
+   ==================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+    initSignatures();
+});
+
+
+
+/* ====================================================
+   UX Helpers - Loading / Success / Error
+   ==================================================== */
+function showLoadingOverlay(show) {
+    var ov = document.getElementById('loadingOverlay');
+    if (!ov) return;
+    if (show) { ov.classList.add('active'); ov.setAttribute('aria-hidden', 'false'); }
+    else      { ov.classList.remove('active'); ov.setAttribute('aria-hidden', 'true'); }
+}
+function showSuccessModal() {
+    var modal = document.getElementById('successModal');
+    if (!modal) return;
+    modal.classList.add('active');
+    // אנימציה רצה כ-1.05s, סגירה אוטומטית אחרי 2.8 שניות
+    setTimeout(function() {
+        if (modal.classList.contains('active')) closeSuccessModal();
+    }, 2800);
+}
+
+function closeSuccessModal() {
+    var modal = document.getElementById('successModal');
+    if (modal) modal.classList.remove('active');
+    // reset מלא של הטופס
+    var form = document.getElementById('healthForm');
+    if (form) form.reset();
+    if (typeof clearAllSignatures === 'function') clearAllSignatures();
+    document.querySelectorAll('.conditional.active').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    // החזר את מצב הגיל לבגיר כברירת מחדל
+    if (typeof toggleMinorSection === 'function') toggleMinorSection();
+    if (typeof clearFieldErrors === 'function') clearFieldErrors();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+window.closeSuccessModal = closeSuccessModal;
+function showErrorModal(message) {
+    var modal = document.getElementById('errorModal');
+    var msgEl = document.getElementById('errorModalMsg');
+    if (msgEl && message) msgEl.textContent = message;
+    if (modal) modal.classList.add('active');
+}
+function disableAllInputs(disable) {
+    var form = document.getElementById('healthForm');
+    if (!form) return;
+    var els = form.querySelectorAll('input, textarea, select, button');
+    for (var i = 0; i < els.length; i++) {
+        els[i].disabled = !!disable;
+    }
+}
+
+/* ====================================================
+   Validation UX - inline errors + scroll to first
+   ==================================================== */
+function showFieldError(fieldId, message) {
+    var f = document.getElementById(fieldId);
+    if (!f) return;
+    f.classList.add('error');
+    // הוסף הודעה תחת השדה (אם לא קיימת)
+    var existing = f.parentNode.querySelector('.field-error-msg[data-for="' + fieldId + '"]');
+    if (!existing) {
+        existing = document.createElement('div');
+        existing.className = 'field-error-msg';
+        existing.setAttribute('data-for', fieldId);
+        f.parentNode.appendChild(existing);
+    }
+    existing.textContent = message;
+    existing.classList.add('show');
+}
+function clearFieldErrors() {
+    document.querySelectorAll('.field-error-msg').forEach(function(e) { e.classList.remove('show'); });
+    document.querySelectorAll('input.error, textarea.error, select.error').forEach(function(e) { e.classList.remove('error'); });
+}
+// Reset error visual when user starts typing
+document.addEventListener('input', function(e) {
+    if (e.target && e.target.classList && e.target.classList.contains('error')) {
+        e.target.classList.remove('error');
+        var msg = e.target.parentNode.querySelector('.field-error-msg');
+        if (msg) msg.classList.remove('show');
+    }
+});
+
+/* ====================================================
+   sendForm() - אינטגרציה עם EmailJS
+   ====================================================
+   • אוסף את כל הנתונים מהטופס
+   • שולח דרך EmailJS (service_9oviqup / template_67yq1ir)
+   • מציג alert על הצלחה/כשל
+   ==================================================== */
+window.sendForm = function() {
+    try {
+        // ולידציה תחילה - שדות חובה
+        var errors = (typeof validateForm === 'function') ? validateForm() : [];
+        if (errors && errors.length > 0) {
+            var box = document.getElementById('errorAlert');
+            if (box) {
+                box.innerHTML = '<strong>נא לתקן את השגיאות הבאות:</strong><br>• ' + errors.join('<br>• ');
+                box.classList.add('active');
+                box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return false;
+        }
+
+        // === שדה שם מלא (תומך גם ב-fullName וגם ב-full_name) ===
+        var fullNameEl = document.getElementById('full_name') || document.getElementById('fullName');
+        var fullName = fullNameEl ? fullNameEl.value : '';
+
+        // === גיל ===
+        var ageEl = document.getElementById('age');
+        var age = ageEl ? ageEl.value : '';
+
+        // === אנטיביוטיקה ===
+        var antibioticsRadio = document.querySelector('input[name="antibiotics"]:checked');
+        var antibiotics = antibioticsRadio ? antibioticsRadio.value : '';
+
+        // === כל התשובות של הרדיו - בפורמט question_name: value ===
+        var answersLines = [];
+        var seenNames = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(function(r) {
+            if (!seenNames[r.name]) {
+                seenNames[r.name] = true;
+                answersLines.push(r.name + ': ' + r.value);
+            }
+        });
+        // הוסף גם שדות טקסט/textarea שיש להם ערך (כדי לכלול את הפירוטים)
+        document.querySelectorAll('#healthForm input[type="text"], #healthForm input[type="tel"], #healthForm input[type="email"], #healthForm input[type="date"], #healthForm input[type="number"], #healthForm textarea').forEach(function(el) {
+            if (el.value && el.value.trim() && el.name) {
+                answersLines.push(el.name + ': ' + el.value.trim());
+            }
+        });
+        var answers = answersLines.join('\n');
+
+        // === חתימה (Base64) ===
+        var signature = '';
+        var ageNum = parseInt(age, 10);
+        if (!isNaN(ageNum) && ageNum > 0 && ageNum < 18) {
+            // קטין - שלח חתימת הורה ראשית; חתימת קטין נשלחת בנפרד
+            if (window.signaturePads && signaturePads.parentSignature && signaturePads.parentSignature.toDataURL) {
+                signature = signaturePads.parentSignature.toDataURL() || '';
+            }
+        } else {
+            if (window.signaturePads && signaturePads.adultSignature && signaturePads.adultSignature.toDataURL) {
+                signature = signaturePads.adultSignature.toDataURL() || '';
+            }
+        }
+
+        // === אובייקט הנתונים בדיוק לפי הספסיפיקציה ===
+        var data = {
+            full_name: fullName,
+            age: age,
+            antibiotics: antibiotics,
+            answers: answers,
+            signature: signature
+        };
+
+        // === שליחה דרך EmailJS ===
+        if (typeof emailjs === 'undefined' || !emailjs.send) {
+            showErrorModal('מערכת השליחה לא נטענה. בדוק/י חיבור אינטרנט ונסה/י שוב.');
+            return false;
+        }
+
+        var btn = document.getElementById('submitBtn');
+        if (btn) { btn.disabled = true; btn.textContent = 'שולח...'; }
+        showLoadingOverlay(true);
+        disableAllInputs(true);
+
+        emailjs.send("service_9oviqup", "template_67yq1ir", data)
+            .then(function() {
+                showLoadingOverlay(false);
+                disableAllInputs(false);
+                if (btn) { btn.disabled = false; btn.textContent = 'שלח טופס'; }
+                showSuccessModal();
+            })
+            .catch(function(error) {
+                console.error(error);
+                showLoadingOverlay(false);
+                disableAllInputs(false);
+                if (btn) { btn.disabled = false; btn.textContent = 'שלח טופס'; }
+                var msg = (error && error.text) ? error.text : 'אירעה בעיה בשליחת הטופס. נסה/י שוב.';
+                showErrorModal(msg);
+            });
+    } catch (err) {
+        console.error('sendForm error:', err);
+        alert('שגיאה בשליחה');
+    }
+    return false;
+};
+
+
+/* ====================================================
+   Single-canvas source of truth
+   ==================================================== */
+window.enableSignatureDrawing = function(canvas) {
+    // הגנה מפני הצמדה כפולה של listeners
+    if (canvas._drawingEnabled) return;
+    canvas._drawingEnabled = true;
+
+    var ctx = canvas.getContext("2d");
+    var drawing = false;
+
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#1a1a1a";
+
+    function getTouchPos(e) {
+        var rect = canvas.getBoundingClientRect();
+        var t = e.touches[0] || e.changedTouches[0];
+        return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+    }
+    function getMousePos(e) {
+        var rect = canvas.getBoundingClientRect();
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+    function hideHint() {
+        var h = document.getElementById("sigModalHint");
+        if (h) h.classList.add("hidden");
+    }
+
+    // === Touch (מובייל) ===
+    canvas.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        drawing = true;
+        var pos = getTouchPos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        hideHint();
+    }, { passive: false });
+
+    canvas.addEventListener("touchmove", function(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var pos = getTouchPos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    }, { passive: false });
+
+    canvas.addEventListener("touchend",    function() { drawing = false; });
+    canvas.addEventListener("touchcancel", function() { drawing = false; });
+
+    // === Mouse (דסקטופ) ===
+    canvas.addEventListener("mousedown", function(e) {
+        drawing = true;
+        var pos = getMousePos(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        hideHint();
+    });
+    canvas.addEventListener("mousemove", function(e) {
+        if (!drawing) return;
+        var pos = getMousePos(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    });
+    canvas.addEventListener("mouseup",    function() { drawing = false; });
+    canvas.addEventListener("mouseleave", function() { drawing = false; });
+};
+
+window.initSignatureCanvas = function(targetId) {
+    var canvas = document.getElementById("sigModalCanvas");
+
+    // הגדר את הממדים הפנימיים של הקנבס לפי גודל ה-CSS שלו -
+    // יחס 1:1 כדי שקואורדינטות המגע יתואמו לציור (ללא ctx.scale!)
+    var rect = canvas.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+        canvas.width  = Math.floor(rect.width);
+        canvas.height = Math.floor(rect.height);
+    }
+
+    var ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#1a1a1a";
+
+    window.signaturePads = window.signaturePads || {};
+    window.signaturePads.current = {
+        targetId: targetId,
+        canvas: canvas,
+        ctx: ctx
+    };
+
+    window.enableSignatureDrawing(canvas);
+
+    console.log("Canvas:", window.signaturePads.current.canvas);
+    console.log("Size:", window.signaturePads.current.canvas.width, window.signaturePads.current.canvas.height);
+};
+
+window.saveSignature = function() {
+    var pad = window.signaturePads && window.signaturePads.current;
+    if (!pad || !pad.canvas) return;
+    var canvas = pad.canvas;
+    try { canvas.dispatchEvent(new Event("pointerup", { bubbles: true })); } catch (_) {}
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            var dataURL = canvas.toDataURL("image/png");
+            if (!dataURL || dataURL === "data:,") {
+                alert("יש לחתום לפני שמירה");
+                return;
+            }
+            var id = pad.targetId;
+            window.signaturePads[id] = {
+                data: dataURL,
+                isSigned: function() { return true; },
+                toDataURL: function() { return dataURL; },
+                isEmpty: false
+            };
+
+            // === הצג את החתימה על קנבס התצוגה המקדימה ===
+            var previewCanvas = document.getElementById(id);
+            if (previewCanvas) {
+                var pctx = previewCanvas.getContext("2d");
+                var rect = previewCanvas.getBoundingClientRect();
+                var ratio = window.devicePixelRatio || 1;
+                previewCanvas.width  = rect.width  * ratio;
+                previewCanvas.height = rect.height * ratio;
+                pctx.setTransform(1, 0, 0, 1, 0, 0);
+                pctx.scale(ratio, ratio);
+                var img = new Image();
+                img.onload = function() {
+                    pctx.clearRect(0, 0, rect.width, rect.height);
+                    pctx.drawImage(img, 0, 0, rect.width, rect.height);
+                };
+                img.src = dataURL;
+                window.signaturePads[id].canvas = previewCanvas;
+                window.signaturePads[id].ctx = pctx;
+            }
+
+            var box = document.querySelector('[data-sig-target="' + id + '"]');
+            if (box) box.classList.add("signed");
+            if (typeof closeSignatureModal === 'function') closeSignatureModal();
+        });
+    });
+};
+
+/* ====================================================
+   Signature Modal - Focus Mode
+   ==================================================== */
+var sigModal = (function() {
+    var modal, canvas, ctx, hint, titleEl;
+    var dpr = 1;
+    var targetId = null;
+    var drawing = false;
+    var activePointerId = null;
+    var lastX = 0, lastY = 0;
+    var isEmpty = true;
+    var initialized = false;
+
+    function init() {
+        if (initialized) return;
+        modal   = document.getElementById('signatureModal');
+        canvas  = document.getElementById('sigModalCanvas');
+        hint    = document.getElementById('sigModalHint');
+        titleEl = document.getElementById('sigModalTitle');
+        ctx     = canvas.getContext('2d');
+        attachEvents();
+        initialized = true;
+    }
+
+    function setupCanvas() {
+        var rect = canvas.getBoundingClientRect();
+        dpr = window.devicePixelRatio || 1;
+        if (rect.width <= 0 || rect.height <= 0) return;
+        canvas.width  = Math.max(1, Math.floor(rect.width  * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.fillStyle = '#1a1a1a';
+    }
+
+    function getPos(clientX, clientY) {
+        var rect = canvas.getBoundingClientRect();
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    function startStroke(clientX, clientY) {
+        var p = getPos(clientX, clientY);
+        drawing = true;
+        lastX = p.x;
+        lastY = p.y;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+        if (isEmpty) {
+            isEmpty = false;
+            if (hint) hint.classList.add('hidden');
+        }
+    }
+
+    function extendStroke(clientX, clientY) {
+        if (!drawing) return;
+        var p = getPos(clientX, clientY);
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        lastX = p.x;
+        lastY = p.y;
+    }
+
+    function endStroke() {
+        drawing = false;
+        activePointerId = null;
+    }
+
+    function onPointerDown(e) {
+        e.preventDefault();
+        if (typeof canvas.setPointerCapture === 'function') {
+            try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+        activePointerId = e.pointerId;
+        startStroke(e.clientX, e.clientY);
+    }
+    function onPointerMove(e) {
+        if (!drawing || e.pointerId !== activePointerId) return;
+        e.preventDefault();
+        var events = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e];
+        for (var i = 0; i < events.length; i++) {
+            extendStroke(events[i].clientX, events[i].clientY);
+        }
+    }
+    function onPointerUp(e) {
+        if (e.pointerId !== activePointerId) return;
+        if (typeof canvas.releasePointerCapture === 'function' &&
+            canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) {
+            try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+        endStroke();
+    }
+
+    // Touch + Mouse fallback
+    function onTouchStart(e) { e.preventDefault(); var t = e.changedTouches[0]; startStroke(t.clientX, t.clientY); }
+    function onTouchMove(e)  { if (!drawing) return; e.preventDefault(); var t = e.changedTouches[0]; extendStroke(t.clientX, t.clientY); }
+    function onTouchEnd(e)   { if (e.cancelable) e.preventDefault(); endStroke(); }
+    function onMouseDown(e)  { e.preventDefault(); startStroke(e.clientX, e.clientY); }
+    function onMouseMove(e)  { if (drawing) extendStroke(e.clientX, e.clientY); }
+    function onMouseUp()     { endStroke(); }
+
+    function attachEvents() {
+        // השימוש בציור נעשה כעת דרך window.enableSignatureDrawing
+        // המוצמד מ-initSignatureCanvas. כדי למנוע double-firing אנו לא
+        // מצמידים יותר את ה-handlers הפנימיים.
+    }
+
+    function clearCanvas() {
+        var c = (window.signaturePads && window.signaturePads.current && window.signaturePads.current.canvas) || canvas;
+        var x = (window.signaturePads && window.signaturePads.current && window.signaturePads.current.ctx) || ctx;
+        x.clearRect(0, 0, c.width, c.height);
+        // החזר את סגנון הקו אחרי הניקוי
+        x.lineWidth = 2.4;
+        x.lineCap = "round";
+        x.lineJoin = "round";
+        x.strokeStyle = "#1a1a1a";
+        isEmpty = true;
+        if (hint) hint.classList.remove('hidden');
+    }
+
+    function open(canvasId, titleText) {
+        init();
+        targetId = canvasId;
+        window.initSignatureCanvas(canvasId);
+        if (titleEl) titleEl.textContent = titleText || 'חתימה דיגיטלית';
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+
+        // אתחל את הקנבס בגודל הנכון אחרי שהוא הוצג
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                isEmpty = true;
+                setupCanvas();
+                clearCanvas();
+                // אם כבר יש חתימה קודמת - טען אותה לתוך המודאל לעריכה
+                var existing = window.signaturePads && signaturePads[targetId];
+                if (existing && existing.isSigned && existing.isSigned()) {
+                    var data = existing.toDataURL();
+                    if (data) {
+                        var img = new Image();
+                        img.onload = function() {
+                            var r = canvas.getBoundingClientRect();
+                            ctx.drawImage(img, 0, 0, r.width, r.height);
+                            isEmpty = false;
+                            if (hint) hint.classList.add('hidden');
+                        };
+                        img.src = data;
+                    }
+                }
+            });
+        });
+    }
+
+    function close() {
+        if (modal) modal.classList.remove('active');
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        targetId = null;
+        drawing = false;
+    }
+
+    function save() { window.saveSignature(); }
+
+    return { open: open, close: close, save: save, clear: clearCanvas };
+})();
+
+// פונקציות גלובליות עבור הכפתורים שבמודאל
+window.closeSignatureModal = function() { sigModal.close(); };
+window.clearModalSignature = function() { sigModal.clear(); };
+window.saveModalSignature  = function() { window.saveSignature(); };
+
+// פונקציה גלובלית - אפשר לקרוא לה מכל מקום
+window.openSignatureModal = function(targetId) {
+    if (!targetId) return;
+    var box = document.querySelector('.signature-box[data-sig-target="' + targetId + '"]');
+    var canvas = box ? box.querySelector('.signature-canvas') : null;
+    var titleText = canvas && canvas.dataset.name === 'adult'  ? 'חתימת המטופל/ת' :
+                    canvas && canvas.dataset.name === 'parent' ? 'חתימת ההורה' :
+                    canvas && canvas.dataset.name === 'minor'  ? 'חתימת הקטין/ה' : 'חתימה דיגיטלית';
+    try {
+        sigModal.open(targetId, titleText);
+    } catch (err) {
+        console.error('Failed to open signature modal:', err);
+    }
+};
+
+// === Event delegation - הפתרון הבולטפרוף ===
+// פועל גם אם DOMContentLoaded פספס, גם אם wireSignatureBoxes נכשל,
+// וגם אם אלמנטים נוספים ל-DOM אחרי האתחול
+document.addEventListener('click', function(e) {
+    var box = e.target && e.target.closest ? e.target.closest('.signature-box[data-sig-target]') : null;
+    if (!box) return;
+    e.preventDefault();
+    var targetId = box.getAttribute('data-sig-target') || (box.dataset && box.dataset.sigTarget);
+    window.openSignatureModal(targetId);
+});
+// תמיכה במקלדת (a11y)
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var box = e.target && e.target.closest ? e.target.closest('.signature-box[data-sig-target]') : null;
+    if (!box) return;
+    e.preventDefault();
+    window.openSignatureModal(box.getAttribute('data-sig-target'));
+});
+
+// סימון a11y לתיבות החתימה (לאחר טעינת DOM)
+function wireSignatureBoxes() {
+    var boxes = document.querySelectorAll('.signature-box[data-sig-target]');
+    for (var i = 0; i < boxes.length; i++) {
+        boxes[i].setAttribute('tabindex', '0');
+        boxes[i].setAttribute('role', 'button');
+    }
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireSignatureBoxes);
+} else {
+    wireSignatureBoxes(); // DOM כבר טעון - הרץ מיד
+}
+
+// בעת ניקוי חתימה - הסר את ה-state הויזואלי
+(function() {
+    var origClearAll = window.clearAllSignatures;
+    window.clearAllSignatures = function() {
+        if (typeof origClearAll === 'function') origClearAll();
+        document.querySelectorAll('.signature-box.signed').forEach(function(b) {
+            b.classList.remove('signed');
+        });
+    };
+})();
+
+</script>
+
+
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay" aria-live="polite" aria-hidden="true">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">שולח הצהרה...</div>
+</div>
+
+<!-- Error Modal -->
+<div class="error-modal" id="errorModal" role="dialog" aria-modal="true">
+    <div class="error-modal-content">
+        <div class="error-icon">!</div>
+        <h2>שגיאה בשליחה</h2>
+        <p id="errorModalMsg">אירעה בעיה בשליחת הטופס. נסה/י שוב.</p>
+        <div class="error-modal-actions">
+            <button type="button" class="btn-retry" onclick="document.getElementById('errorModal').classList.remove('active'); sendForm();">נסה שוב</button>
+            <button type="button" class="btn-cancel" onclick="document.getElementById('errorModal').classList.remove('active');">סגור</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Signature Modal - Full Focus Mode -->
+<div class="signature-modal" id="signatureModal" role="dialog" aria-modal="true">
+    <div class="signature-modal-header">
+        <span id="sigModalTitle">חתימה דיגיטלית</span>
+        <button type="button" class="sig-modal-close" onclick="closeSignatureModal()" aria-label="סגור">×</button>
+    </div>
+    <div class="signature-modal-canvas-wrap">
+        <canvas id="sigModalCanvas"></canvas>
+        <span class="sig-modal-hint" id="sigModalHint">חתום/י כאן באמצעות אצבע או עט</span>
+    </div>
+    <div class="signature-modal-actions">
+        <button type="button" class="btn-clear" onclick="clearModalSignature()">נקה חתימה</button>
+        <button type="button" class="btn-save" onclick="saveModalSignature()">שמור חתימה</button>
+    </div>
+</div>
+
+</body>
+</html>
