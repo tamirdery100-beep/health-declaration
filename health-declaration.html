@@ -2697,28 +2697,38 @@ document.addEventListener('input', function(e) {
 /* ====================================================
    Signature compression - reduces size + adds white BG
    ==================================================== */
-window.compressSignatureCanvas = function(srcCanvas) {
+window.compressSignatureCanvas = function(srcCanvas, targetMaxBytes) {
+    // יעד ברירת מחדל - ~10KB (50KB / 5 שדות עם מרווח ביטחון)
+    targetMaxBytes = targetMaxBytes || 10000;
     try {
         if (!srcCanvas || !srcCanvas.width || !srcCanvas.height) return null;
-        var maxW = 800, maxH = 400;
         var w = srcCanvas.width, h = srcCanvas.height;
-        var scale = Math.min(maxW / w, maxH / h, 1);
-        var nw = Math.max(1, Math.floor(w * scale));
-        var nh = Math.max(1, Math.floor(h * scale));
-        var tmp = document.createElement('canvas');
-        tmp.width = nw;
-        tmp.height = nh;
-        var tctx = tmp.getContext('2d');
-        // רקע לבן - לא שקוף - מבטיח שהחתימה תוצג ב-PDF/מייל ללא רקע שחור/שקוף
-        tctx.fillStyle = '#ffffff';
-        tctx.fillRect(0, 0, nw, nh);
-        tctx.drawImage(srcCanvas, 0, 0, w, h, 0, 0, nw, nh);
-        // PNG דחוס; ניסיון אופציונלי ב-JPEG אם PNG גדול מדי
-        var url = tmp.toDataURL('image/png');
-        if (url.length > 60000) {
-            try { url = tmp.toDataURL('image/jpeg', 0.85); } catch (_) {}
+        // ניסיונות במספר רזולוציות + איכויות JPEG, מקטין עד שמגיעים ליעד
+        var attempts = [
+            { maxDim: 500, q: 0.85 },
+            { maxDim: 450, q: 0.80 },
+            { maxDim: 400, q: 0.75 },
+            { maxDim: 350, q: 0.70 },
+            { maxDim: 300, q: 0.65 },
+            { maxDim: 260, q: 0.55 }
+        ];
+        for (var i = 0; i < attempts.length; i++) {
+            var a = attempts[i];
+            var scale = Math.min(a.maxDim / Math.max(w, h), 1);
+            var nw = Math.max(1, Math.floor(w * scale));
+            var nh = Math.max(1, Math.floor(h * scale));
+            var tmp = document.createElement('canvas');
+            tmp.width = nw; tmp.height = nh;
+            var tctx = tmp.getContext('2d');
+            tctx.fillStyle = '#ffffff';
+            tctx.fillRect(0, 0, nw, nh);
+            tctx.drawImage(srcCanvas, 0, 0, w, h, 0, 0, nw, nh);
+            var url = tmp.toDataURL('image/jpeg', a.q);
+            if (url.length <= targetMaxBytes || i === attempts.length - 1) {
+                return url;
+            }
         }
-        return url;
+        return null;
     } catch (e) {
         return null;
     }
@@ -2844,44 +2854,36 @@ window.downloadDeclarationPDF = function(formData) {
    Email body builder - clean, structured HTML
    ==================================================== */
 window.buildEmailHTMLBody = function(formData) {
+    // חשוב: לא כוללים חתימות כתמונות פה כדי לחסוך מקום (מגבלת 50KB של EmailJS)
+    // החתימות ייכללו בתבנית באמצעות {{signature}} כ-<img> נפרד
     function row(label, value) {
         if (!value || !String(value).trim()) return '';
-        return '<tr><td style="padding:6px 12px;background:#f7f5f0;font-weight:600;text-align:right;border-bottom:1px solid #e8e8e8;width:35%">' + label + '</td>' +
-               '<td style="padding:6px 12px;border-bottom:1px solid #e8e8e8;text-align:right">' + String(value).replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</td></tr>';
+        return '<tr><td style="padding:5px 10px;background:#f7f5f0;font-weight:600;text-align:right;border-bottom:1px solid #eee;width:38%">' + label + '</td>' +
+               '<td style="padding:5px 10px;border-bottom:1px solid #eee;text-align:right">' + String(value).replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</td></tr>';
     }
     function section(title) {
-        return '<tr><td colspan="2" style="background:#1a1a1a;color:#fff;padding:10px 12px;font-weight:700;text-align:right;font-size:15px">' + title + '</td></tr>';
+        return '<tr><td colspan="2" style="background:#1a1a1a;color:#fff;padding:8px 10px;font-weight:700;text-align:right;font-size:14px">' + title + '</td></tr>';
     }
-    var html = '<div dir="rtl" style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#1a1a1a">';
-    html += '<div style="background:#1a1a1a;color:#fff;padding:18px 20px;text-align:center"><h2 style="margin:0;font-size:20px">הצהרת בריאות חדשה</h2><div style="margin-top:6px;font-size:13px;color:#cfcfcf">' + (formData.submittedAtFormatted || '') + '</div></div>';
-    html += '<table style="border-collapse:collapse;width:100%;direction:rtl">';
-    html += section('פרטים אישיים');
-    html += row('שם מלא', formData.fullName);
-    html += row('טלפון', formData.phone);
-    html += row('אימייל', formData.email);
-    html += row('עיר', formData.city);
-    html += row('תאריך לידה', formData.birthDate);
-    html += row('עיסוק', formData.occupation);
-    html += row('גיל', formData.age);
-    html += row('מין', formData.gender);
+    var h = '<div dir="rtl" style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#1a1a1a">';
+    h += '<div style="background:#1a1a1a;color:#fff;padding:14px;text-align:center"><h2 style="margin:0;font-size:18px">הצהרת בריאות חדשה</h2><div style="margin-top:4px;font-size:12px;color:#cfcfcf">' + (formData.submittedAtFormatted || '') + '</div></div>';
+    h += '<table style="border-collapse:collapse;width:100%;direction:rtl;font-size:13px">';
+    h += section('פרטים אישיים');
+    h += row('שם מלא', formData.fullName);
+    h += row('טלפון', formData.phone);
+    h += row('אימייל', formData.email);
+    h += row('עיר', formData.city);
+    h += row('תאריך לידה', formData.birthDate);
+    h += row('עיסוק', formData.occupation);
+    h += row('גיל', formData.age);
+    h += row('מין', formData.gender);
     if (formData._allFields && formData._allFields.length) {
-        html += section('שאלון בריאות');
+        h += section('שאלון בריאות');
         for (var i = 0; i < formData._allFields.length; i++) {
-            html += row(formData._allFields[i].q, formData._allFields[i].a);
+            h += row(formData._allFields[i].q, formData._allFields[i].a);
         }
     }
-    html += '</table>';
-    if (formData.adultSignature && formData.adultSignature.indexOf('data:image') === 0) {
-        html += '<div style="margin-top:18px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת המטופל/ת</div><img src="' + formData.adultSignature + '" alt="חתימה" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
-    }
-    if (formData.parentSignature && formData.parentSignature.indexOf('data:image') === 0) {
-        html += '<div style="margin-top:12px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת ההורה</div><img src="' + formData.parentSignature + '" alt="חתימת הורה" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
-    }
-    if (formData.minorSignature && formData.minorSignature.indexOf('data:image') === 0) {
-        html += '<div style="margin-top:12px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת הקטין/ה</div><img src="' + formData.minorSignature + '" alt="חתימת קטין" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
-    }
-    html += '</div>';
-    return html;
+    h += '</table></div>';
+    return h;
 };
 
 
@@ -2999,13 +3001,16 @@ window.sendForm = function() {
         }
 
         // === אסוף חתימות נוספות (עבור קטין) ===
+        // רק אם הן נחתמו בפועל - אחרת שדות ריקים (חיסכון במגבלת 50KB)
         var parentSigData = '';
         var minorSigData = '';
-        if (window.signaturePads) {
-            if (signaturePads.parentSignature && signaturePads.parentSignature.toDataURL) {
+        var ageInt = parseInt(age || "0", 10);
+        var isMinorPatient = !isNaN(ageInt) && ageInt > 0 && ageInt < 18;
+        if (window.signaturePads && isMinorPatient) {
+            if (signaturePads.parentSignature && signaturePads.parentSignature.isSigned && signaturePads.parentSignature.isSigned()) {
                 parentSigData = signaturePads.parentSignature.toDataURL() || '';
             }
-            if (signaturePads.minorSignature && signaturePads.minorSignature.toDataURL) {
+            if (signaturePads.minorSignature && signaturePads.minorSignature.isSigned && signaturePads.minorSignature.isSigned()) {
                 minorSigData = signaturePads.minorSignature.toDataURL() || '';
             }
         }
@@ -3057,6 +3062,26 @@ window.sendForm = function() {
         if (btn) { btn.disabled = true; btn.textContent = 'שולח...'; }
         showLoadingOverlay(true);
         disableAllInputs(true);
+
+        // === בדיקה אחרונה: סך גודל המשתנים < 50KB (מגבלת EmailJS) ===
+        var totalSize = 0;
+        for (var key in data) { totalSize += String(data[key] || '').length; }
+        console.log('EmailJS payload size:', totalSize, 'bytes');
+        if (totalSize > 48000) {
+            // חיתוך אגרסיבי של HTML body (החתימות חשובות יותר)
+            var hbLen = (data.email_body_html || '').length;
+            var overflow = totalSize - 47000;
+            if (overflow > 0 && hbLen > overflow) {
+                data.email_body_html = data.email_body_html.substring(0, hbLen - overflow) + '...';
+            }
+            // אם עדיין יותר מדי - הסר חתימות הורה/קטין
+            totalSize = 0;
+            for (var k2 in data) { totalSize += String(data[k2] || '').length; }
+            if (totalSize > 48000) {
+                data.parent_signature = '';
+                data.minor_signature = '';
+            }
+        }
 
         emailjs.send("service_9oviqup", "template_67yq1ir", data)
             .then(function() {
