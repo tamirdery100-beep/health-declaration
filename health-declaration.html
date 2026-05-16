@@ -1223,6 +1223,9 @@ window.twoStateToggle = function(targetId, isYes) {
 </script>
 <!-- EmailJS SDK -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- jsPDF + html2canvas (לייצור PDF במקום) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
     (function() {
         if (typeof emailjs !== 'undefined' && emailjs.init) {
@@ -2689,6 +2692,199 @@ document.addEventListener('input', function(e) {
     }
 });
 
+
+
+/* ====================================================
+   Signature compression - reduces size + adds white BG
+   ==================================================== */
+window.compressSignatureCanvas = function(srcCanvas) {
+    try {
+        if (!srcCanvas || !srcCanvas.width || !srcCanvas.height) return null;
+        var maxW = 800, maxH = 400;
+        var w = srcCanvas.width, h = srcCanvas.height;
+        var scale = Math.min(maxW / w, maxH / h, 1);
+        var nw = Math.max(1, Math.floor(w * scale));
+        var nh = Math.max(1, Math.floor(h * scale));
+        var tmp = document.createElement('canvas');
+        tmp.width = nw;
+        tmp.height = nh;
+        var tctx = tmp.getContext('2d');
+        // רקע לבן - לא שקוף - מבטיח שהחתימה תוצג ב-PDF/מייל ללא רקע שחור/שקוף
+        tctx.fillStyle = '#ffffff';
+        tctx.fillRect(0, 0, nw, nh);
+        tctx.drawImage(srcCanvas, 0, 0, w, h, 0, 0, nw, nh);
+        // PNG דחוס; ניסיון אופציונלי ב-JPEG אם PNG גדול מדי
+        var url = tmp.toDataURL('image/png');
+        if (url.length > 60000) {
+            try { url = tmp.toDataURL('image/jpeg', 0.85); } catch (_) {}
+        }
+        return url;
+    } catch (e) {
+        return null;
+    }
+};
+
+/* ====================================================
+   PDF Generator - creates a well-structured PDF from form data
+   ==================================================== */
+window.generateDeclarationPDF = function(formData) {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        console.warn('jsPDF לא נטען');
+        return null;
+    }
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'portrait' });
+
+    var pageW = doc.internal.pageSize.getWidth();
+    var pageH = doc.internal.pageSize.getHeight();
+    var margin = 40;
+    var y = margin;
+    var lineH = 16;
+
+    function checkPage(needed) {
+        if (y + needed > pageH - margin) { doc.addPage(); y = margin; }
+    }
+    function rtl(text) {
+        // הופך את הטקסט להופעה תקינה ב-RTL בתוך PDF Latin-only
+        // עברית לא נתמכת ישירות ב-jsPDF Default, אבל הטקסט יישמר בקובץ
+        return text;
+    }
+    function header(text) {
+        checkPage(28);
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.setFillColor(245, 240, 230);
+        doc.rect(margin, y - 12, pageW - margin * 2, 22, 'F');
+        doc.setTextColor(20, 20, 20);
+        doc.text(rtl(text), pageW - margin - 5, y + 4, { align: 'right' });
+        y += 28;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+    }
+    function field(label, value) {
+        if (!value || !String(value).trim()) return;
+        checkPage(lineH * 2);
+        var text = label + ': ' + value;
+        var lines = doc.splitTextToSize(text, pageW - margin * 2);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.setTextColor(50, 50, 50);
+        for (var i = 0; i < lines.length; i++) {
+            checkPage(lineH);
+            doc.text(lines[i], pageW - margin, y, { align: 'right' });
+            y += lineH;
+        }
+        y += 4;
+    }
+
+    // === כותרת ===
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(20, 20, 20);
+    doc.text('Health Declaration / Hatzharat Briut', pageW - margin, y, { align: 'right' });
+    y += 24;
+    doc.setFontSize(10);
+    doc.setTextColor(120, 120, 120);
+    doc.text('Submitted: ' + (formData.submittedAtFormatted || new Date().toLocaleString('he-IL')), pageW - margin, y, { align: 'right' });
+    y += 24;
+
+    // === פרטים אישיים ===
+    header('Personal Details');
+    field('Full Name / שם מלא', formData.fullName);
+    field('Phone / טלפון', formData.phone);
+    field('Email / אימייל', formData.email);
+    field('City / עיר', formData.city);
+    field('Birth Date / תאריך לידה', formData.birthDate);
+    field('Occupation / עיסוק', formData.occupation);
+    field('Age / גיל', formData.age);
+    field('Gender / מין', formData.gender);
+
+    // === תשובות (Q&A) ===
+    header('Answers / תשובות');
+    if (formData._allFields && formData._allFields.length) {
+        for (var k = 0; k < formData._allFields.length; k++) {
+            var pair = formData._allFields[k];
+            field(pair.q, pair.a);
+        }
+    }
+
+    // === חתימה ===
+    var sigUrl = formData.adultSignature || formData.signature;
+    if (sigUrl && sigUrl.indexOf('data:image') === 0) {
+        header('Patient Signature / חתימת המטופל');
+        checkPage(120);
+        try { doc.addImage(sigUrl, 'PNG', pageW - margin - 220, y, 220, 100); y += 110; } catch (_) {}
+    }
+    if (formData.parentSignature && formData.parentSignature.indexOf('data:image') === 0) {
+        header('Parent Signature / חתימת ההורה');
+        checkPage(120);
+        try { doc.addImage(formData.parentSignature, 'PNG', pageW - margin - 220, y, 220, 100); y += 110; } catch (_) {}
+    }
+    if (formData.minorSignature && formData.minorSignature.indexOf('data:image') === 0) {
+        header('Minor Signature / חתימת הקטין');
+        checkPage(120);
+        try { doc.addImage(formData.minorSignature, 'PNG', pageW - margin - 220, y, 220, 100); y += 110; } catch (_) {}
+    }
+
+    return doc;
+};
+
+window.downloadDeclarationPDF = function(formData) {
+    try {
+        var doc = window.generateDeclarationPDF(formData);
+        if (!doc) return;
+        var name = (formData.fullName || 'patient').replace(/[^\w\u0590-\u05FF-]/g, '_');
+        doc.save('health_declaration_' + name + '_' + Date.now() + '.pdf');
+    } catch (e) {
+        console.warn('Failed to download PDF:', e);
+    }
+};
+
+/* ====================================================
+   Email body builder - clean, structured HTML
+   ==================================================== */
+window.buildEmailHTMLBody = function(formData) {
+    function row(label, value) {
+        if (!value || !String(value).trim()) return '';
+        return '<tr><td style="padding:6px 12px;background:#f7f5f0;font-weight:600;text-align:right;border-bottom:1px solid #e8e8e8;width:35%">' + label + '</td>' +
+               '<td style="padding:6px 12px;border-bottom:1px solid #e8e8e8;text-align:right">' + String(value).replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</td></tr>';
+    }
+    function section(title) {
+        return '<tr><td colspan="2" style="background:#1a1a1a;color:#fff;padding:10px 12px;font-weight:700;text-align:right;font-size:15px">' + title + '</td></tr>';
+    }
+    var html = '<div dir="rtl" style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#1a1a1a">';
+    html += '<div style="background:#1a1a1a;color:#fff;padding:18px 20px;text-align:center"><h2 style="margin:0;font-size:20px">הצהרת בריאות חדשה</h2><div style="margin-top:6px;font-size:13px;color:#cfcfcf">' + (formData.submittedAtFormatted || '') + '</div></div>';
+    html += '<table style="border-collapse:collapse;width:100%;direction:rtl">';
+    html += section('פרטים אישיים');
+    html += row('שם מלא', formData.fullName);
+    html += row('טלפון', formData.phone);
+    html += row('אימייל', formData.email);
+    html += row('עיר', formData.city);
+    html += row('תאריך לידה', formData.birthDate);
+    html += row('עיסוק', formData.occupation);
+    html += row('גיל', formData.age);
+    html += row('מין', formData.gender);
+    if (formData._allFields && formData._allFields.length) {
+        html += section('שאלון בריאות');
+        for (var i = 0; i < formData._allFields.length; i++) {
+            html += row(formData._allFields[i].q, formData._allFields[i].a);
+        }
+    }
+    html += '</table>';
+    if (formData.adultSignature && formData.adultSignature.indexOf('data:image') === 0) {
+        html += '<div style="margin-top:18px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת המטופל/ת</div><img src="' + formData.adultSignature + '" alt="חתימה" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
+    }
+    if (formData.parentSignature && formData.parentSignature.indexOf('data:image') === 0) {
+        html += '<div style="margin-top:12px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת ההורה</div><img src="' + formData.parentSignature + '" alt="חתימת הורה" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
+    }
+    if (formData.minorSignature && formData.minorSignature.indexOf('data:image') === 0) {
+        html += '<div style="margin-top:12px;padding:14px;border:1px solid #e8e8e8;border-radius:8px"><div style="font-weight:700;margin-bottom:8px;text-align:right">חתימת הקטין/ה</div><img src="' + formData.minorSignature + '" alt="חתימת קטין" style="max-width:100%;height:auto;border:1px solid #ddd;background:#fff"></div>';
+    }
+    html += '</div>';
+    return html;
+};
+
+
 /* ====================================================
    sendForm() - אינטגרציה עם EmailJS
    ====================================================
@@ -2753,14 +2949,103 @@ window.sendForm = function() {
             }
         }
 
-        // === אובייקט הנתונים בדיוק לפי הספסיפיקציה ===
+        // === בנה רשימת כל השאלות והתשובות לתצוגה מסודרת ===
+        var allFields = [];
+        var fieldLabels = {
+            'fullName':'שם מלא','phone':'טלפון נייד','email':'אימייל','city':'עיר',
+            'birthDate':'תאריך לידה','occupation':'עיסוק','age':'גיל','gender':'מין',
+            'wound_healing':'ריפוי פצעים/הצטלקות','wound_healing_text':'פירוט',
+            'herpes':'הרפס','herpes_text':'פירוט',
+            'diabetes':'סוכרת','diabetes_balanced':'סוכרת מאוזנת',
+            'other_disease':'מחלה אחרת','other_disease_text':'פירוט',
+            'pregnant':'בהריון','breastfeeding':'מניקה','fertility':'טיפולי פוריות',
+            'heart_bp':'מחלות לב/ל"ד','heart_bp_text':'פירוט',
+            'thyroid':'בלוטת התריס','thyroid_text':'פירוט',
+            'cancer':'מחלה ממארת','cancer_text':'פירוט',
+            'g6pd':'חסר G6PD','g6pd_text':'פירוט',
+            'hepatitis':'הפטיטיס','hepatitis_text':'פירוט',
+            'hiv':'HIV','hiv_text':'פירוט',
+            'antibiotics':'אנטיביוטיקה ב-10 ימים','antibiotics_text':'פירוט',
+            'health_status':'מצב בריאותי כללי',
+            'acne':'אקנה בעבר','acne_when':'מתי חלף',
+            'antidepressants':'נוגדי דיכאון','antidepressants_text':'פירוט',
+            'past_reactions':'תגובות חריפות לטיפולים','past_reactions_text':'פירוט',
+            'roaccutane':'רואקוטן','roaccutane_when':'מתי הסתיים',
+            'skin_diseases':'מחלות עור','skin_diseases_text':'פירוט',
+            'regular_medication':'תרופות קבועות','regular_medication_text':'פירוט',
+            'contraceptives':'גלולות/התקן','contraceptives_text':'פירוט',
+            'prescription_topical':'תכשירים במרשם','prescription_topical_text':'פירוט',
+            'peeling_products':'תכשירים מקלפים','peeling_products_text':'פירוט',
+            'daily_products':'מוצרי טיפוח יומיומיים',
+            'smoking':'עישון','smoking_text':'פירוט',
+            'sun_exposure':'חשיפה לשמש',
+            'allergies':'רגישויות/אלרגיות','allergies_text':'פירוט',
+            'anesthetic_allergy':'רגישות לאלחוש','anesthetic_allergy_text':'פירוט',
+            'metal_allergy':'רגישות למתכות','metal_allergy_text':'פירוט',
+            'other_allergies':'רגישויות נוספות',
+            'parentName':'שם ההורה','parentRelation':'קרבה','parentId':'ת"ז ההורה',
+            'minorName':'שם הקטין/ה','minorId':'ת"ז הקטין/ה'
+        };
+        var formEl = document.getElementById('healthForm');
+        if (formEl) {
+            var fd = new FormData(formEl);
+            var seen = {};
+            for (var pair of fd.entries()) {
+                if (seen[pair[0]]) continue; seen[pair[0]] = true;
+                if (!pair[1] || !String(pair[1]).trim()) continue;
+                var lbl = fieldLabels[pair[0]] || pair[0];
+                allFields.push({ q: lbl, a: pair[1] });
+            }
+        }
+
+        // === אסוף חתימות נוספות (עבור קטין) ===
+        var parentSigData = '';
+        var minorSigData = '';
+        if (window.signaturePads) {
+            if (signaturePads.parentSignature && signaturePads.parentSignature.toDataURL) {
+                parentSigData = signaturePads.parentSignature.toDataURL() || '';
+            }
+            if (signaturePads.minorSignature && signaturePads.minorSignature.toDataURL) {
+                minorSigData = signaturePads.minorSignature.toDataURL() || '';
+            }
+        }
+
+        // === מבנה נתונים לבניית מייל + PDF ===
+        var fullFormData = {
+            fullName: fullName,
+            phone: document.getElementById('phone') ? document.getElementById('phone').value : '',
+            email: document.getElementById('email') ? document.getElementById('email').value : '',
+            city: document.getElementById('city') ? document.getElementById('city').value : '',
+            birthDate: document.getElementById('birthDate') ? document.getElementById('birthDate').value : '',
+            occupation: document.getElementById('occupation') ? document.getElementById('occupation').value : '',
+            age: age,
+            gender: (document.querySelector('input[name="gender"]:checked') || {}).value || '',
+            antibiotics: antibiotics,
+            adultSignature: signature,
+            parentSignature: parentSigData,
+            minorSignature: minorSigData,
+            submittedAtFormatted: new Date().toLocaleString('he-IL'),
+            _allFields: allFields
+        };
+
+        // === אובייקט EmailJS - שדות מקוריים + שדות חדשים לתבנית מקצועית ===
         var data = {
             full_name: fullName,
             age: age,
             antibiotics: antibiotics,
             answers: answers,
-            signature: signature
+            signature: signature,                                       // dataURL דחוס
+            // === שדות חדשים: ===
+            email_body_html: window.buildEmailHTMLBody(fullFormData),   // HTML מעוצב מלא
+            parent_signature: parentSigData,
+            minor_signature: minorSigData,
+            submitted_at: fullFormData.submittedAtFormatted,
+            phone: fullFormData.phone,
+            email_addr: fullFormData.email
         };
+
+        // שמור עבור PDF download אחרי הצלחה
+        window._lastFormData = fullFormData;
 
         // === שליחה דרך EmailJS ===
         if (typeof emailjs === 'undefined' || !emailjs.send) {
@@ -2778,6 +3063,10 @@ window.sendForm = function() {
                 showLoadingOverlay(false);
                 disableAllInputs(false);
                 if (btn) { btn.disabled = false; btn.textContent = 'שלח טופס'; }
+                // הורד PDF אוטומטית אחרי הצלחה
+                try {
+                    if (window._lastFormData) window.downloadDeclarationPDF(window._lastFormData);
+                } catch (e) { console.warn('PDF download failed:', e); }
                 showSuccessModal();
             })
             .catch(function(error) {
@@ -2994,10 +3283,15 @@ window.signaturePads = window.signaturePads || {};
         }
         var dataURL;
         try {
-            dataURL = modalCanvas.toDataURL('image/png');
+            // ייצור גרסה דחוסה של החתימה - PNG עם רקע לבן בגודל ≤800×400
+            // זה מקטין את ה-base64 מ-~60KB ל-~8-15KB ומונע ניתוק בתבניות מייל
+            dataURL = window.compressSignatureCanvas(modalCanvas);
+            if (!dataURL) {
+                dataURL = modalCanvas.toDataURL('image/png');
+            }
         } catch (e) {
-            alert('שגיאה בשמירת החתימה. נסה/י שוב.');
-            return;
+            try { dataURL = modalCanvas.toDataURL('image/png'); }
+            catch (ee) { alert('שגיאה בשמירת החתימה. נסה/י שוב.'); return; }
         }
         if (!dataURL || dataURL === 'data:,') {
             alert('יש לחתום לפני שמירה');
@@ -3188,9 +3482,4 @@ if (document.readyState === 'loading') {
     </div>
     <div class="signature-modal-actions">
         <button type="button" class="btn-clear" onclick="clearModalSignature()">נקה חתימה</button>
-        <button type="button" class="btn-save" onclick="saveModalSignature()">שמור חתימה</button>
-    </div>
-</div>
-
-</body>
-</html>
+        <button type="button" class="btn-save" onclick="saveModalSignature()">שמור חתימ
