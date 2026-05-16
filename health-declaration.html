@@ -3088,10 +3088,6 @@ window.sendForm = function() {
                 showLoadingOverlay(false);
                 disableAllInputs(false);
                 if (btn) { btn.disabled = false; btn.textContent = 'שלח טופס'; }
-                // הורד PDF אוטומטית אחרי הצלחה
-                try {
-                    if (window._lastFormData) window.downloadDeclarationPDF(window._lastFormData);
-                } catch (e) { console.warn('PDF download failed:', e); }
                 showSuccessModal();
             })
             .catch(function(error) {
